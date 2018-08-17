@@ -1,0 +1,49 @@
+pipeline
+              {
+                             agent any
+                                           stages
+                                           {
+                                                                        stage('compile-stage')
+                                                                        {
+                                                                          steps   
+                                                                          {           
+                                                                                      withMaven(maven:'Maven_3_3_9')
+                                                                                      {
+                                                                                                     sh 'mvn -f restaurant-search-service/pom.xml clean compile'
+                                                                                      }
+                                                                           }          
+                                                                        }             
+                                                                        stage('Testing-stage')
+                                                                        {
+                                                                          steps
+                                                                          {
+                                                                                      withMaven(maven:'Maven_3_3_9')
+                                                                                      {
+                                                                                                     sh 'mvn -f restaurant-search-service/pom.xml test'
+                                                                                      }
+                                                                           }          
+                                                                        } 
+                                                                         stage('SonarQube analysis') 
+                                                                         {
+                                           steps 
+                                           {
+                                                          withSonarQubeEnv('mysonar') 
+                                                          {
+                                                                        sh 'mvn -f restaurant-search-service/pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar'
+                                                           }
+                                                          }
+                                           }
+                                                          
+                                                                        stage('Build-stage')
+                                                                        {
+                                                                           steps
+                                                                           {
+                                                                                      withMaven(maven:'Maven_3_3_9')
+                                                                                      {
+                                                                                                     sh 'mvn -f restaurant-search-service/pom.xml package'
+                                                                                      }
+                                                                           } 
+                                                                        }  
+                             
+                                           } 
+              }                        
