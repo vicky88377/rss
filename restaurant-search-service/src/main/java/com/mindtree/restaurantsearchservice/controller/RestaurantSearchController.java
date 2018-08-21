@@ -1,5 +1,6 @@
 package com.mindtree.restaurantsearchservice.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,20 +8,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mindtree.restaurantsearchservice.model.ResponseStatusModel;
+import com.mindtree.restaurantsearchservice.service.RestaurantSearchServiceInterface;
 
 @RestController
 @RequestMapping("/restaurants")
 public class RestaurantSearchController {
-
+	
+	@Autowired
+	private RestaurantSearchServiceInterface service;
+	
 	@GetMapping("/search/{area}")
-	public ResponseStatusModel searchRestaurantByArea(@PathVariable String area,@RequestParam String name,@RequestParam int page,@RequestParam String rating,@RequestParam String budget,
-			@RequestParam String cuisine) {
+	public ResponseStatusModel searchRestaurantByArea(@PathVariable String area,@RequestParam String name,@RequestParam(defaultValue="1") int page,@RequestParam(defaultValue="ALL") String rating,@RequestParam(defaultValue="ALL") String budget,
+			@RequestParam(defaultValue="ALL") String cuisine) {
 		return null;
 	}
 	
 	@GetMapping("/search/{latitude}/{longitude}")
-	public ResponseStatusModel searchRestaurantByCoordinates(String latitude,String longitude,@RequestParam String name,@RequestParam(defaultValue="1") int page,@RequestParam String rating,@RequestParam String budget,
-			@RequestParam String cuisine) {
+	public ResponseStatusModel searchRestaurantByCoordinates(String latitude,String longitude,@RequestParam String name,@RequestParam(defaultValue="1") int page,@RequestParam(defaultValue="ALL") String rating,@RequestParam(defaultValue="ALL") String budget,
+			@RequestParam(defaultValue="ALL") String cuisine) {
 		return null;
 	}
 	
