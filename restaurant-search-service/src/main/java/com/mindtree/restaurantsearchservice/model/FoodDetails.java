@@ -9,7 +9,7 @@ public class FoodDetails {
 	private String foodId;
 	@JsonProperty("food_name")
 	private String foodName;
-	private String price;
+	private float foodPrice;
 	private String description;
 	@JsonProperty("availability_status")
 	private String availabilityStatus;
@@ -51,16 +51,16 @@ public class FoodDetails {
 	/**
 	 * @return the price
 	 */
-	public String getPrice() {
-		return price;
+	public float getFoodPrice() {
+		return foodPrice;
 	}
 
 	/**
 	 * @param price
 	 *            the price to set
 	 */
-	public void setPrice(String price) {
-		this.price = price;
+	public void setFoodPrice(float foodPrice) {
+		this.foodPrice = foodPrice;
 	}
 
 	/**

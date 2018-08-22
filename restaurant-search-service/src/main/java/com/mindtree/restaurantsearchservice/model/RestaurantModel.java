@@ -14,7 +14,7 @@ public class RestaurantModel {
 	@JsonProperty("restaurant_close_time")
 	private String restaurantCloseTime;
 	@JsonProperty("minimum_order")
-	private String minimumOrder;
+	private float minimumOrder;
 	@JsonProperty("average_delivery_time")
 	private String averageDeliveryTime;
 	@JsonProperty("delivery_point")
@@ -28,10 +28,10 @@ public class RestaurantModel {
 	private String locality;
 	@JsonProperty("locality_verbose")
 	private String localityVerbose;
-	private String rating;
+	private float rating;
 	private String offer;
-	private String latitude;
-	private String longitude;
+	private double latitude;
+	private double longitude;
 
 	/**
 	 * @return the restaurantId
@@ -96,7 +96,7 @@ public class RestaurantModel {
 	/**
 	 * @return the minimumOrder
 	 */
-	public String getMinimumOrder() {
+	public float getMinimumOrder() {
 		return minimumOrder;
 	}
 
@@ -104,7 +104,7 @@ public class RestaurantModel {
 	 * @param minimumOrder
 	 *            the minimumOrder to set
 	 */
-	public void setMinimumOrder(String minimumOrder) {
+	public void setMinimumOrder(float minimumOrder) {
 		this.minimumOrder = minimumOrder;
 	}
 
@@ -246,7 +246,7 @@ public class RestaurantModel {
 	/**
 	 * @return the rating
 	 */
-	public String getRating() {
+	public float getRating() {
 		return rating;
 	}
 
@@ -254,7 +254,7 @@ public class RestaurantModel {
 	 * @param rating
 	 *            the rating to set
 	 */
-	public void setRating(String rating) {
+	public void setRating(float rating) {
 		this.rating = rating;
 	}
 
@@ -276,7 +276,7 @@ public class RestaurantModel {
 	/**
 	 * @return the latitude
 	 */
-	public String getLatitude() {
+	public double getLatitude() {
 		return latitude;
 	}
 
@@ -284,14 +284,14 @@ public class RestaurantModel {
 	 * @param latitude
 	 *            the latitude to set
 	 */
-	public void setLatitude(String latitude) {
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 
 	/**
 	 * @return the longitude
 	 */
-	public String getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
 
@@ -299,7 +299,7 @@ public class RestaurantModel {
 	 * @param longitude
 	 *            the longitude to set
 	 */
-	public void setLongitude(String longitude) {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 
