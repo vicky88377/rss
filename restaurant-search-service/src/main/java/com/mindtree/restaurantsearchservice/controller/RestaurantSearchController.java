@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mindtree.restaurantsearchservice.model.ResponseStatusModel;
+import com.mindtree.restaurantsearchservice.model.RestaurantModel;
 import com.mindtree.restaurantsearchservice.service.RestaurantSearchServiceInterface;
 
 @RestController
@@ -18,8 +19,11 @@ public class RestaurantSearchController {
 	private RestaurantSearchServiceInterface service;
 	
 	@GetMapping("/search/{area}")
-	public ResponseStatusModel searchRestaurantByArea(@PathVariable String area,@RequestParam String name,@RequestParam(defaultValue="1") int page,@RequestParam(defaultValue="ALL") String rating,@RequestParam(defaultValue="ALL") String budget,
+	public ResponseStatusModel searchRestaurantByArea(@PathVariable String area,@RequestParam String name,@RequestParam(defaultValue="1") int page,@RequestParam(defaultValue="desc") String rating,@RequestParam(defaultValue="asc") String budget,
 			@RequestParam(defaultValue="ALL") String cuisine) {
+		if(name!=null || !name.isEmpty()) {
+			RestaurantModel data = service.getRestaurantByNameAndArea(area, name, page);
+		}
 		return null;
 	}
 	

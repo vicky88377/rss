@@ -9,7 +9,6 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 
 	@Override
 	public RestaurantModel getRestaurantByBudgetAndArea(String location, String budget, int pageNo) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
