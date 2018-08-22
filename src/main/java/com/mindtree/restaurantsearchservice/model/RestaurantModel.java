@@ -1,10 +1,15 @@
 package com.mindtree.restaurantsearchservice.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@Document(indexName = "searchrestaurants", type = "restaurantinfo")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RestaurantModel {
+	@Id
 	@JsonProperty("restaurant_id")
 	private String restaurantId;
 	@JsonProperty("restaurant_name")
@@ -302,5 +307,18 @@ public class RestaurantModel {
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
+
+	@Override
+	public String toString() {
+		return "RestaurantModel [restaurantId=" + restaurantId + ", restaurantName=" + restaurantName
+				+ ", restaurantOpenTime=" + restaurantOpenTime + ", restaurantCloseTime=" + restaurantCloseTime
+				+ ", minimumOrder=" + minimumOrder + ", averageDeliveryTime=" + averageDeliveryTime + ", deliveryPoint="
+				+ deliveryPoint + ", restaurantImage=" + restaurantImage + ", address=" + address + ", city=" + city
+				+ ", state=" + state + ", country=" + country + ", locality=" + locality + ", localityVerbose="
+				+ localityVerbose + ", rating=" + rating + ", offer=" + offer + ", latitude=" + latitude
+				+ ", longitude=" + longitude + "]";
+	}
+	
+	
 
 }

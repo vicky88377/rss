@@ -1,11 +1,16 @@
 package com.mindtree.restaurantsearchservice.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Document(indexName="searchfood",type="foodmenu")
 public class FoodDetails {
-	@JsonProperty("food_id")
+	@Id
+	@JsonProperty("foodId")
 	private String foodId;
 	@JsonProperty("food_name")
 	private String foodName;
