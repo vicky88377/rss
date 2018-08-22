@@ -22,7 +22,6 @@ public class RestaurantSearchController {
 	public ResponseStatusModel searchRestaurantByArea(@PathVariable String area,@RequestParam String name,@RequestParam(defaultValue="1") int page,@RequestParam(defaultValue="0") String rating,@RequestParam(defaultValue="0") String budget,
 			@RequestParam(defaultValue="ALL") String cuisine) {
 		if(name!=null || !name.isEmpty()) {
-			RestaurantModel data = service.getRestaurantByNameAndArea(area, name, page);
 		}
 		return null;
 	}

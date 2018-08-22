@@ -2,33 +2,29 @@ package com.mindtree.restaurantsearchservice.service;
 
 import org.springframework.stereotype.Component;
 
+import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
 
 @Component
 public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInterface {
 
 	@Override
-	public RestaurantModel getRestaurantByBudgetAndArea(String location, String budget, int pageNo) {
+		public RestaurantModel getRestaurantByAreaAndFilterParam(String location, String cuisine, String budget,
+			String rating, String name, int pageNo) {
+		if(name!=null && !name.isEmpty()) {
+			// pass all the parameter to the repository to fetch restaurant based on name and location
+		}
+		else if(cuisine!=null && !cuisine.isEmpty()) {
+			// pass all the parameter to the repository to fetch restaurant based on cuisine and location
+		}
+		else {
+			//fetch all restaurant based on default condition
+		}
 		return null;
+	
 	}
 
-	@Override
-	public RestaurantModel getRestaurantByCuisineAndArea(String location, String cuisine, int pageNo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public RestaurantModel getRestaurantByNameAndArea(String location, String restaurantName, int pageNo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public RestaurantModel getRestaurantByRatingAndArea(String location, int rating, int pageNo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	@Override
 	public RestaurantModel getRestaurantByArea(String location, int pageNo) {
@@ -37,34 +33,22 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 	}
 
 	@Override
-	public RestaurantModel getRestaurantByLocationAndDistance(String latitude, String longitude, float distance,
-			int pageNo) {
-		// TODO Auto-generated method stub
+	public RestaurantModel getRestaurantByLocationAndFilterParam(String latitude, String longitude, float distance,
+			String cuisine, String budget, String rating, String name, int pageNo) {
+		if(name!=null && !name.isEmpty()) {
+			// pass all the parameter to the repository to fetch restaurant based on name and location
+		}
+		else if(cuisine!=null && !cuisine.isEmpty()) {
+			// pass all the parameter to the repository to fetch restaurant based on cuisine and location
+		}
+		else {
+			//fetch all restaurant based on default condition
+		}
 		return null;
 	}
 
 	@Override
-	public RestaurantModel getRestaurantByBudgetAndLocation(String latitude, String longitude, String budget,
-			int pageNo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public RestaurantModel getRestaurantByNameAndLocation(String latitude, String longitude, String name, int pageNo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public RestaurantModel getRestaurantByCuisineAndLocation(String latitude, String longitude, String cuisine,
-			int pageNo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public RestaurantModel getRestaurantByRatingndLocation(String latitude, String longitude, int rating, int pageNo) {
+	public RestaurantModel getRestaurantByLocation(String latitude, String longitude, float distance) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -80,6 +64,14 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public FoodDetails getFoodDetailsOfARestuarant(long resId, long foodId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 
 	
 
