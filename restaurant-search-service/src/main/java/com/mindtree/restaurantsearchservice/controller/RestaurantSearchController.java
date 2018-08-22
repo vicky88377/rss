@@ -19,7 +19,7 @@ public class RestaurantSearchController {
 	private RestaurantSearchServiceInterface service;
 	
 	@GetMapping("/search/{area}")
-	public ResponseStatusModel searchRestaurantByArea(@PathVariable String area,@RequestParam String name,@RequestParam(defaultValue="1") int page,@RequestParam(defaultValue="desc") String rating,@RequestParam(defaultValue="asc") String budget,
+	public ResponseStatusModel searchRestaurantByArea(@PathVariable String area,@RequestParam String name,@RequestParam(defaultValue="1") int page,@RequestParam(defaultValue="0") String rating,@RequestParam(defaultValue="0") String budget,
 			@RequestParam(defaultValue="ALL") String cuisine) {
 		if(name!=null || !name.isEmpty()) {
 			RestaurantModel data = service.getRestaurantByNameAndArea(area, name, page);
