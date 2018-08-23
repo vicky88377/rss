@@ -12,29 +12,46 @@ public class RestaurantModel {
 	@Id
 	@JsonProperty("restaurant_id")
 	private String restaurantId;
+	
 	@JsonProperty("restaurant_name")
 	private String restaurantName;
-	@JsonProperty("restaurant_open_time")
+	
+	@JsonProperty("start_time")
 	private String restaurantOpenTime;
-	@JsonProperty("restaurant_close_time")
+	
+	@JsonProperty("end_time")
 	private String restaurantCloseTime;
-	@JsonProperty("minimum_order")
+	
+	@JsonProperty("minimum_order_price")
 	private float minimumOrder;
+	
 	@JsonProperty("average_delivery_time")
 	private String averageDeliveryTime;
+	
 	@JsonProperty("delivery_point")
 	private String deliveryPoint;
-	@JsonProperty("restaurant_image")
+	
+	@JsonProperty("display_image")
 	private String restaurantImage;
+	
 	private String address;
+	
 	private String city;
+	
 	private String state;
+	
 	private String country;
+	
 	private String locality;
+	
 	@JsonProperty("locality_verbose")
 	private String localityVerbose;
+	
 	private float rating;
+	
+	@JsonProperty("offer_info")
 	private String offer;
+	
 	private double latitude;
 	private double longitude;
 

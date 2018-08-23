@@ -1,5 +1,5 @@
 package com.mindtree.restaurantsearchservice.dao;
 
-public class SearchDao {
+public interface SearchDao {
 	
 }
