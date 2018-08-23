@@ -20,7 +20,7 @@ public interface RestaurantSearchServiceInterface {
          public RestaurantModel getResaurantById(String  resId);
          //public RestaurantModel getRestaurantReviews(long resId,long pageNo);
          public FoodDetails getFoodDetailsOfARestuarant(String  resId,String foodId);
-         public boolean validateDeliveryAddress(String resId,String latitude,String longitude);
+         public boolean validateDeliveryAddress(String resId, double latitude, double longitude);
          public Page<FoodDetails> getAllFoodDetailsByRestaurantId(String resId,int pageNo);
          
          
