@@ -1,5 +1,7 @@
 package com.mindtree.restaurantsearchservice.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -77,10 +79,13 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 	}
 
 	@Override
-	public Page<RestaurantModel> getResaurantById(String resId) {
-		Pageable pageable = PageRequest.of(1, pageSize);
-		Page<RestaurantModel> data = restaurantRepo.findById(resId, pageable);
-		return data;
+	public RestaurantModel getResaurantById(String resId) {
+		
+		Optional<RestaurantModel> data = restaurantRepo.findById(resId);
+		if(data.isPresent()) {
+			return data.get();
+		}
+		return null;
 	}
 
 	@Override

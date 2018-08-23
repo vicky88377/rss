@@ -17,7 +17,7 @@ public interface RestaurantSearchServiceInterface {
          public Page<RestaurantModel> getRestaurantByLocationAndFilterParam(double latitude,double longitude,float distance,
         		 String cuisine,float budget,float rating,String name,int pageNo);
          public Page<RestaurantModel> getRestaurantByLocation(double latitude,double longitude,float distance,int pageNo);
-         public Page<RestaurantModel> getResaurantById(String  resId);
+         public RestaurantModel getResaurantById(String  resId);
          //public RestaurantModel getRestaurantReviews(long resId,long pageNo);
          public FoodDetails getFoodDetailsOfARestuarant(String  resId,long foodId);
          public boolean validateDeliveryAddress(String resId,String latitude,String longitude);
