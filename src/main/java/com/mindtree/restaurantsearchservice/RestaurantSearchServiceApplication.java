@@ -19,12 +19,14 @@ public class RestaurantSearchServiceApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		
+		@SuppressWarnings("deprecation")
 		Pageable pageable = new PageRequest(0, 10);
-		Page<RestaurantModel> data = repo.findByAreaRatingBudget("Bangalore", 3.0f, 200.0f, pageable);
+		//Page<RestaurantModel> data = repo.findByAreaRatingBudget("Bangalore", 3.0f, 200.0f, pageable);
+		//Page<RestaurantModel> data = repo.findByAreaAndCuisine("Bangalore", "North Indian", 3.0f, 200.0f, pageable);
+		//Page<RestaurantModel> data = repo.findByAreaAndName("Bangalore", "Sultans of Spice", pageable);
+		Page<RestaurantModel> data = repo.findById("50943", pageable);
 		
-		data.stream().forEach(System.out::println);
-	
-		
+		data.stream().forEach(System.out::println);	
 	}
 
 	public static void main(String[] args) {
