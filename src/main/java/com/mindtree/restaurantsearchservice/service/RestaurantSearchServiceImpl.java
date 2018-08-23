@@ -85,8 +85,14 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 	}
 
 	@Override
-	public boolean validateDeliveryAddress(String resId, String latitude, String longitude) {
-		// TODO Auto-generated method stub
+	public boolean validateDeliveryAddress(String resId, double latitude, double longitude) {
+		RestaurantModel data = restaurantRepo.findByIdDAO(resId);
+		double lat = data.getLatitude();
+		double lon = data.getLongitude();
+		double distance = Math.sqrt( Math.pow((latitude - lat), 2)+Math.pow((longitude-lon),2) );
+		if(distance <= 5) {
+			return true;
+		}
 		return false;
 	}
 
