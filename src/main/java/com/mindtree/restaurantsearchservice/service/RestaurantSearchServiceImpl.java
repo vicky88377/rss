@@ -1,27 +1,43 @@
 package com.mindtree.restaurantsearchservice.service;
 
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
+import com.mindtree.restaurantsearchservice.repository.RestaurantSearchRepository;
 
 @Component
 public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInterface {
+	
+	@Autowired
+	RestaurantSearchRepository restaurantRepo;
 
+	@Value("$restaurant.page.size")
+	private int pageSize;
 	@Override
-		public RestaurantModel getRestaurantByAreaAndFilterParam(String location, String cuisine, String budget,
-			String rating, String name, int pageNo)  {
-		
+		public Page<RestaurantModel> getRestaurantByAreaAndFilterParam(String location, String cuisine, float budget,
+			float rating, String name, int pageNo)  {
+		    Pageable pageable= PageRequest.of(pageNo, pageSize);
+		    Page<RestaurantModel> data=null;
 		if(name!=null && !name.isEmpty()) {
 			// pass all the parameter to the repository to fetch restaurant based on name and location
 		}
 		else if(cuisine!=null && !cuisine.isEmpty()) {
-			// pass all the parameter to the repository to fetch restaurant based on cuisine and location
-		}
+
+            data = restaurantRepo.findByAreaAndCuisine(location, cuisine, rating, budget, pageable);
+             }
 		else {
 			//fetch all restaurant based on default condition
-		}
-		return null;
+			data = restaurantRepo.findByAreaRatingBudget(location, rating, budget, pageable);
+			 }
+		return data;
 		}
 		
 	
@@ -30,34 +46,39 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 	
 
 	@Override
-	public RestaurantModel getRestaurantByArea(String location, int pageNo) {
+	public Page<RestaurantModel> getRestaurantByArea(String location, int pageNo) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public RestaurantModel getRestaurantByLocationAndFilterParam(String latitude, String longitude, float distance,
-			String cuisine, String budget, String rating, String name, int pageNo) {
+	public Page<RestaurantModel> getRestaurantByLocationAndFilterParam(double latitude, double longitude, float distance,
+			String cuisine, float budget, float rating, String name, int pageNo) {
+		Pageable pageable= PageRequest.of(pageNo, pageSize);
+	    Page<RestaurantModel> data=null;
 		if(name!=null && !name.isEmpty()) {
-			// pass all the parameter to the repository to fetch restaurant based on name and location
+			data=restaurantRepo.findByLonLatAndName(name, distance, latitude, longitude, pageable);
 		}
 		else if(cuisine!=null && !cuisine.isEmpty()) {
 			// pass all the parameter to the repository to fetch restaurant based on cuisine and location
+			data=restaurantRepo.findByLonLatRatingBudget(cuisine, rating, budget, distance, latitude, 
+					longitude, pageable);
 		}
 		else {
-			//fetch all restaurant based on default condition
+			//
 		}
 		return null;
 	}
 
 	@Override
-	public RestaurantModel getRestaurantByLocation(String latitude, String longitude, float distance) {
-		// TODO Auto-generated method stub
-		return null;
+	public Page<RestaurantModel> getRestaurantByLocation(double latitude, double longitude, float distance,int pageNo) {
+		Pageable pageable= PageRequest.of(pageNo, pageSize);
+	    Page<RestaurantModel> data=restaurantRepo.findByLonAndLat(distance, latitude, longitude, pageable);
+		return data;
 	}
 
 	@Override
-	public RestaurantModel getResaurantById(long resId) {
+	public Page<RestaurantModel> getResaurantById(long resId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
