@@ -10,7 +10,8 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 
 	@Override
 		public RestaurantModel getRestaurantByAreaAndFilterParam(String location, String cuisine, String budget,
-			String rating, String name, int pageNo) {
+			String rating, String name, int pageNo)  {
+		
 		if(name!=null && !name.isEmpty()) {
 			// pass all the parameter to the repository to fetch restaurant based on name and location
 		}
@@ -21,8 +22,10 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 			//fetch all restaurant based on default condition
 		}
 		return null;
+		}
+		
 	
-	}
+	
 
 	
 
