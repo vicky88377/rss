@@ -1,7 +1,5 @@
 package com.mindtree.restaurantsearchservice.service;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -9,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import com.mindtree.restaurantsearchservice.dao.SearchDao;
 import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
 import com.mindtree.restaurantsearchservice.repository.RestaurantSearchRepository;
@@ -17,7 +16,7 @@ import com.mindtree.restaurantsearchservice.repository.RestaurantSearchRepositor
 public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInterface {
 
 	@Autowired
-	RestaurantSearchRepository restaurantRepo;
+	 SearchDao restaurantRepo;
 
 	@Value("$restaurant.page.size")
 	private int pageSize;
@@ -32,10 +31,10 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 			// and location
 		} else if (cuisine != null && !cuisine.isEmpty()) {
 
-			data = restaurantRepo.findByAreaAndCuisine(location, cuisine, rating, budget, pageable);
+			data = restaurantRepo.findByAreaAndCuisineDAO(location, cuisine, rating, budget, pageable);
 		} else {
 			// fetch all restaurant based on default condition
-			data = restaurantRepo.findByAreaRatingBudget(location, rating, budget, pageable);
+			data = restaurantRepo.findByAreaRatingBudgetDAO(location, rating, budget, pageable);
 		}
 		return data;
 	}
@@ -45,7 +44,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		// TODO Auto-generated method stub
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		float rating=0, budget=0;
-		Page<RestaurantModel> data = restaurantRepo.findByAreaRatingBudget(location, rating, budget, pageable);
+		Page<RestaurantModel> data = restaurantRepo.findByAreaRatingBudgetDAO(location, rating, budget, pageable);
 		return data;
 	}
 
@@ -55,14 +54,14 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		Page<RestaurantModel> data = null;
 		if (name != null && !name.isEmpty()) {
-			data = restaurantRepo.findByLonLatAndName(name, distance, latitude, longitude, pageable);
+			data = restaurantRepo.findByLonLatAndNameDAO(name, distance, latitude, longitude, pageable);
 		} else if (cuisine != null && !cuisine.isEmpty()) {
 			// pass all the parameter to the repository to fetch restaurant based on cuisine
 			// and location
-			data = restaurantRepo.findByLonLatRatingBudget(cuisine, rating, budget, distance, latitude, longitude,
+			data = restaurantRepo.findByLonLatRatingBudgetDAO(cuisine, rating, budget, distance, latitude, longitude,
 					pageable);
 		} else {
-			data = restaurantRepo.findByLonAndLat(rating, budget, distance, latitude, longitude,
+			data = restaurantRepo.findByLonAndLatDAO(rating, budget, distance, latitude, longitude,
 					pageable);
 		}
 		return null;
@@ -73,7 +72,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 			int pageNo) {
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		float rating = 0, budget = 0;
-		Page<RestaurantModel> data = restaurantRepo.findByLonAndLat(rating, budget, distance, latitude, longitude,
+		Page<RestaurantModel> data = restaurantRepo.findByLonAndLatDAO(rating, budget, distance, latitude, longitude,
 				pageable);
 		return data;
 	}
@@ -81,11 +80,9 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 	@Override
 	public RestaurantModel getResaurantById(String resId) {
 		
-		Optional<RestaurantModel> data = restaurantRepo.findById(resId);
-		if(data.isPresent()) {
-			return data.get();
-		}
-		return null;
+		RestaurantModel data = restaurantRepo.findByIdDAO(resId);
+		
+		return data;
 	}
 
 	@Override
@@ -95,9 +92,15 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 	}
 
 	@Override
-	public FoodDetails getFoodDetailsOfARestuarant(String resId, long foodId) {
-		// TODO Auto-generated method stub
-		return null;
+	public FoodDetails getFoodDetailsOfARestuarant(String resId, String foodId) {
+	
+		return restaurantRepo.getFoodDetailsByRestaurantIdAndFoodIdDAO(resId, foodId);
+	}
+
+	@Override
+	public Page<FoodDetails> getAllFoodDetailsByRestaurantId(String resId, int pageNo) {
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		return restaurantRepo.getFoodDetailsByRestaurantIdDAO(resId, pageable);
 	}
 
 }

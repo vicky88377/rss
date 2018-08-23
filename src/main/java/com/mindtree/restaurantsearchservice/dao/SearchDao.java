@@ -18,7 +18,7 @@ public interface SearchDao {
 	
 	public Page<RestaurantModel> findByAreaAndNameDAO(String area, String restaurantName, Pageable page);
 	
-	public Page<RestaurantModel> findByIdDAO(String id, Pageable page);
+	public RestaurantModel findByIdDAO(String id);
 	
 	public Page<RestaurantModel> findByLonAndLatDAO(float rating, float minimumOrderPrice,float distance, double latitude, double longitude, Pageable page);
 
@@ -31,6 +31,6 @@ public interface SearchDao {
 	// food search APIs
 	public Page<FoodDetails> getFoodDetailsByRestaurantIdDAO(String resId, Pageable page);
 	
-	public Page<FoodDetails> getFoodDetailsByRestaurantIdAndFoodIdDAO(String resId, String foodId, Pageable page);
+	public FoodDetails getFoodDetailsByRestaurantIdAndFoodIdDAO(String resId, String foodId);
 	
 }

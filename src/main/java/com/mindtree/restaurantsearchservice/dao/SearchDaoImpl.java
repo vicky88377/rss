@@ -1,5 +1,7 @@
 package com.mindtree.restaurantsearchservice.dao;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -34,9 +36,13 @@ public class SearchDaoImpl implements SearchDao {
 	}
 
 	@Override
-	public Page<RestaurantModel> findByIdDAO(String id, Pageable page) {
+	public RestaurantModel findByIdDAO(String id) {
+		Optional<RestaurantModel> resData=restaurantSearchRepository.findById(id);
+		if(resData.isPresent()) {
+			return resData.get();
+		}
+		return null;
 		
-		return restaurantSearchRepository.findById(id, page);
 	}
 
 	@Override
@@ -60,15 +66,15 @@ public class SearchDaoImpl implements SearchDao {
 	}
 
 	@Override
-	public Page<FoodDetails> getFoodDetailsByRestaurantIdDAO(String resId, Pageable page) {
+	public Page<FoodDetails> getFoodDetailsByRestaurantIdDAO(String resId,Pageable page) {
 		
-		return foodDetailsSearchRepository.getFoodDetailsByRestaurantId(resId, page);
+		return foodDetailsSearchRepository.getFoodDetailsByRestaurantId(resId,page);
 	}
 
 	@Override
-	public Page<FoodDetails> getFoodDetailsByRestaurantIdAndFoodIdDAO(String resId, String foodId, Pageable page) {
+	public FoodDetails getFoodDetailsByRestaurantIdAndFoodIdDAO(String resId, String foodId) {
 		
-		return foodDetailsSearchRepository.getFoodDetailsByRestaurantIdAndFoodId(resId, foodId, page);
+		return foodDetailsSearchRepository.getFoodDetailsByRestaurantIdAndFoodId(resId, foodId);
 	}
 	
 }
