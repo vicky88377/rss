@@ -12,15 +12,22 @@ public class FoodDetails {
 	@Id
 	@JsonProperty("foodId")
 	private String foodId;
+	
 	@JsonProperty("food_name")
 	private String foodName;
+	
+	@JsonProperty("food_price")
 	private float foodPrice;
+	
 	private String description;
+	
 	@JsonProperty("availability_status")
 	private String availabilityStatus;
+	
 	@JsonProperty("restuarant_id")
 	private String restuarantId;
-	@JsonProperty("cuisine_id")
+	
+	@JsonProperty("cuisines_id")
 	private String cuisineId;
 
 	/**

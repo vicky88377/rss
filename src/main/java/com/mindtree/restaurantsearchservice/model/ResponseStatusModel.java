@@ -5,11 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ResponseStatusModel {
+	
 	@JsonProperty("status_code")
 	private int statusCode;
+	
 	private String status;
+	
 	@JsonProperty(required = false)
 	private String message;
+	
 	private Object[] data;
 
 	/**
