@@ -2,17 +2,22 @@ package com.mindtree.restaurantsearchservice.dao;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
 import com.mindtree.restaurantsearchservice.repository.FoodDetailsSearchRepository;
 import com.mindtree.restaurantsearchservice.repository.RestaurantSearchRepository;
 
+@Repository
 public class SearchDaoImpl implements SearchDao {
 
+	@Autowired
 	private RestaurantSearchRepository restaurantSearchRepository;
+	@Autowired
 	private FoodDetailsSearchRepository foodDetailsSearchRepository;
 	
 	@Override

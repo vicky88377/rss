@@ -14,7 +14,7 @@ public class ResponseStatusModel {
 	@JsonProperty(required = false)
 	private String message;
 	
-	private Object[] data;
+	private Object data;
 
 	/**
 	 * @return the statusCode
@@ -64,7 +64,7 @@ public class ResponseStatusModel {
 	/**
 	 * @return the data
 	 */
-	public Object[] getData() {
+	public Object getData() {
 		return data;
 	}
 
@@ -72,7 +72,7 @@ public class ResponseStatusModel {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(Object[] data) {
+	public void setData(Object data) {
 		this.data = data;
 	}
 

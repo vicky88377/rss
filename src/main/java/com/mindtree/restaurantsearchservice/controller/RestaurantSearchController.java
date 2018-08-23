@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.ResponseStatusModel;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
 import com.mindtree.restaurantsearchservice.service.RestaurantSearchServiceInterface;
@@ -23,9 +24,11 @@ public class RestaurantSearchController {
 	private RestaurantSearchServiceInterface service;
 
 	@GetMapping("/search/{area}")
-	public ResponseStatusModel searchRestaurantByArea(@PathVariable String area, @RequestParam(required=false) String name,
-			@RequestParam(defaultValue = "0") Integer page, @RequestParam(required=false)Float rating, @RequestParam(required=false) Float budget,
-			@RequestParam(required=false) String cuisine) {
+	public ResponseStatusModel searchRestaurantByArea(@PathVariable String area,
+			@RequestParam(required = false) String name, @RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(required = false, defaultValue = "0") Float rating,
+			@RequestParam(required = false, defaultValue = "0") Float budget,
+			@RequestParam(required = false) String cuisine) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("searching restaurant with area=" + area + " with name=" + name + ",page=" + page + ",rating="
 					+ rating + ",budget=" + budget + ",cuisine=" + cuisine);
@@ -37,10 +40,12 @@ public class RestaurantSearchController {
 	}
 
 	@GetMapping("/search/{latitude}/{longitude}")
-	public ResponseStatusModel searchRestaurantByCoordinates(double latitude, double longitude,
-			@RequestParam String name, @RequestParam(defaultValue = "0") Integer page,
-			@RequestParam(required=false) Float rating, @RequestParam(required=false) Float budget,
-			@RequestParam(required=false) String cuisine, @RequestParam(required=false) Float distance) {
+	public ResponseStatusModel searchRestaurantByCoordinates(@PathVariable Double latitude,
+			@PathVariable Double longitude, @RequestParam(required=false) String name, @RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(required = false, defaultValue = "0") Float rating,
+			@RequestParam(required = false, defaultValue = "0") Float budget,
+			@RequestParam(required = false) String cuisine,
+			@RequestParam(required = false, defaultValue = "1") Float distance) {
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("searching restaurant with latitude,longitude=" + latitude + "," + longitude + " with name="
@@ -57,9 +62,9 @@ public class RestaurantSearchController {
 		if (logger.isDebugEnabled()) {
 			logger.debug("getting restaurant details of restaurant id=" + restaurantId);
 		}
+		RestaurantModel data = service.getResaurantById(restaurantId);
 		
-		
-		return null;
+		return createResponse(data);
 	}
 
 	@GetMapping("/{restaurant_id}/food/{food_id}")
@@ -67,32 +72,74 @@ public class RestaurantSearchController {
 			@RequestParam("food_id") String foodId) {
 		if (logger.isDebugEnabled()) {
 		}
-		return null;
+		FoodDetails data = service.getFoodDetailsOfARestuarant(restaurantId, foodId);
+		return createResponse(data);
 	}
 
-	@GetMapping("/{restaurant _id}/validate/{latitude}/{longitude}")
-	public ResponseStatusModel validateDeliveryAddress(@PathVariable String latitude, @PathVariable String longitude) {
+	@GetMapping("/{restaurant_id}/validate/{latitude}/{longitude}")
+	public ResponseStatusModel validateDeliveryAddress(@PathVariable("restaurant_id") String restaurantId,@PathVariable String latitude, @PathVariable String longitude) {
 		if (logger.isDebugEnabled()) {
 		}
-		return null;
-	}
-
-	private ResponseStatusModel createResponse(Page<RestaurantModel> data) {
-		ResponseStatusModel responseStatus = new ResponseStatusModel();
-		if (data != null) {
+		boolean data = service.validateDeliveryAddress(restaurantId, latitude, longitude);
+		ResponseStatusModel status=new ResponseStatusModel();
+		if(data==false) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Creating Failure Response");
+			}
+			status.setMessage("Delivery is not available for your area");
+			status.setStatusCode(401);
+			status.setStatus("SUCCESS");
+		}else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating Success Response");
 			}
-			responseStatus.setData(new Object[] { data });
+			status.setMessage("Delivery is available for your area");	
+			status.setStatusCode(200);
+			status.setStatus("SUCCESS");
+			status.setData(data);
+		}
+		return status;
+	}
+
+	private ResponseStatusModel createResponse(Object data) {
+		ResponseStatusModel status=new ResponseStatusModel();
+		if(data==null) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Creating Failure Response");
+			}
+			status.setMessage("No Data Found");
+			status.setStatusCode(401);
+			status.setStatus("SUCCESS");
+		}else {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Creating Success Response");
+			}
+			status.setMessage("Data Found");
+			status.setStatusCode(200);
+			status.setStatus("SUCCESS");
+			status.setData(data);
+		}
+		return status;
+	}
+	
+	private ResponseStatusModel createResponse(Page<RestaurantModel> data) {
+		ResponseStatusModel responseStatus = new ResponseStatusModel();
+		if (!data.getContent().isEmpty()) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Creating Success Response");
+			}
+			responseStatus.setData(data);
 			responseStatus.setStatusCode(200);
 			responseStatus.setStatus("SUCCESS");
 		} else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating Failure Response");
 			}
-			responseStatus.setStatusCode(400);
-			responseStatus.setStatus("FAILURE");
+			responseStatus.setStatusCode(401);
+			responseStatus.setStatus("SUCCESS");
+			responseStatus.setMessage("No Data Found");
 		}
 		return responseStatus;
 	}
+	
 }

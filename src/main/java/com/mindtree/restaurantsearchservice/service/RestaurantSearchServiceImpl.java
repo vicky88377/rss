@@ -28,7 +28,6 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		if (name != null && !name.isEmpty()) {
 			data=restaurantRepo.findByAreaAndNameDAO(location, name, pageable);
 		} else if (cuisine != null && !cuisine.isEmpty()) {
-
 			data = restaurantRepo.findByAreaAndCuisineDAO(location, cuisine, rating, budget, pageable);
 		} else {
 			// fetch all restaurant based on default condition
@@ -64,7 +63,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 			data = restaurantRepo.findByLonAndLatDAO(rating, budget, distance, latitude, longitude,
 					pageable);
 		}
-		return null;
+		return data;
 	}
 
 	@Override
