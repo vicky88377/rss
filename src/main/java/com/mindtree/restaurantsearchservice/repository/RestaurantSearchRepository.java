@@ -17,4 +17,8 @@ public interface RestaurantSearchRepository extends ElasticsearchRepository<Rest
 	@Query("{\"bool\":{\"must\":[{\"multi_match\":{\"query\":\"?0\",\"fields\":[\"city\",\"address\",\"locality\"]}},{\"match\":{\"cuisen_type\":\"?1\"}},{\"match_phrase\":{\"cuisen_type\":\"?1\"}},{\"range\":{\"rating\":{\"lte\":5,\"gte\":?2}}},{\"range\":{\"minimum_order_price\":{\"gte\":?3}}}]}},\"sort\":[{\"rating\":{\"order\":\"desc\"}}]")
 	public Page<RestaurantModel> findByAreaAndCuisine(String area, String cuisineType, float rating, float minimumOrderPrice, Pageable page);
 
+	// Getting restaurant details by area and restaurant name
+	@Query("{\"bool\":{\"must\":[{\"multi_match\":{\"query\":\"Faridabad\",\"fields\":[\"city\",\"address\",\"locality\"]}}],\"should\":[{\"match_phrase\":{\"restaurant_name\":{\"query\":\"The Retriever\",\"boost\":3}}},{\"match\":{\"restaurant_name\":{\"query\":\"The Retriever\"}}}]}}")
+	public Page<RestaurantModel> findByAreaAndName(String area, String restaurantName);
+	
 }
