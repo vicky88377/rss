@@ -17,8 +17,8 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 	@Autowired
 	RestaurantSearchRepository restaurantRepo;
 
-	@Value("$restaurant.page.size")
-	private int pageSize;
+	@Value("${restaurant.page.size}")
+	private Integer pageSize;
 
 	@Override
 	public Page<RestaurantModel> getRestaurantByAreaAndFilterParam(String location, String cuisine, float budget,
@@ -42,7 +42,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 	public Page<RestaurantModel> getRestaurantByArea(String location, int pageNo) {
 		// TODO Auto-generated method stub
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		float rating=0, budget=0;
+		float rating = 0, budget = 0;
 		Page<RestaurantModel> data = restaurantRepo.findByAreaRatingBudget(location, rating, budget, pageable);
 		return data;
 	}
@@ -60,8 +60,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 			data = restaurantRepo.findByLonLatRatingBudget(cuisine, rating, budget, distance, latitude, longitude,
 					pageable);
 		} else {
-			data = restaurantRepo.findByLonAndLat(rating, budget, distance, latitude, longitude,
-					pageable);
+			data = restaurantRepo.findByLonAndLat(rating, budget, distance, latitude, longitude, pageable);
 		}
 		return null;
 	}
