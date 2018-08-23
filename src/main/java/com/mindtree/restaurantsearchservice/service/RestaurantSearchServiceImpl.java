@@ -27,8 +27,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		Page<RestaurantModel> data = null;
 		if (name != null && !name.isEmpty()) {
-			// pass all the parameter to the repository to fetch restaurant based on name
-			// and location
+			data=restaurantRepo.findByAreaAndNameDAO(location, name, pageable);
 		} else if (cuisine != null && !cuisine.isEmpty()) {
 
 			data = restaurantRepo.findByAreaAndCuisineDAO(location, cuisine, rating, budget, pageable);
