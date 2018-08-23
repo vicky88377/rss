@@ -77,7 +77,7 @@ public class RestaurantSearchController {
 	}
 
 	@GetMapping("/{restaurant_id}/validate/{latitude}/{longitude}")
-	public ResponseStatusModel validateDeliveryAddress(@PathVariable("restaurant_id") String restaurantId,@PathVariable String latitude, @PathVariable String longitude) {
+	public ResponseStatusModel validateDeliveryAddress(@PathVariable("restaurant_id") String restaurantId,@PathVariable Double latitude, @PathVariable Double longitude) {
 		if (logger.isDebugEnabled()) {
 		}
 		boolean data = service.validateDeliveryAddress(restaurantId, latitude, longitude);
