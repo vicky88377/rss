@@ -2,7 +2,6 @@ package com.mindtree.restaurantsearchservice.service;
 
 import org.springframework.stereotype.Component;
 
-import com.mindtree.restaurantsearchservice.exceptions.DataAccessException;
 import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
 
@@ -26,7 +25,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		}
 		
 	
-	}
+	
 
 	
 
