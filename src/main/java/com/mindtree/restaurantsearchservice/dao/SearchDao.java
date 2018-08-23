@@ -2,11 +2,14 @@ package com.mindtree.restaurantsearchservice.dao;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.annotations.Query;
 
+import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
 
 public interface SearchDao {
 	
+	// restaurant search APIs
 	public Page<RestaurantModel> findByAreaRatingBudgetDAO(String area, float rating, float minimumOrderPrice,
 			Pageable page);
 	
@@ -24,5 +27,10 @@ public interface SearchDao {
 	
 	public Page<RestaurantModel> findByLonLatRatingBudgetDAO(String cuisineType, float rating, float minimumOrderPrice,
 			float distance, double latitude, double longitude, Pageable page);
+	
+	// food search APIs
+	public Page<FoodDetails> getFoodDetailsByRestaurantIdDAO(String resId, Pageable page);
+	
+	public Page<FoodDetails> getFoodDetailsByRestaurantIdAndFoodIdDAO(String resId, String foodId, Pageable page);
 	
 }

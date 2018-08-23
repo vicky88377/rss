@@ -3,12 +3,15 @@ package com.mindtree.restaurantsearchservice.dao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
+import com.mindtree.restaurantsearchservice.repository.FoodDetailsSearchRepository;
 import com.mindtree.restaurantsearchservice.repository.RestaurantSearchRepository;
 
 public class SearchDaoImpl implements SearchDao {
 
 	private RestaurantSearchRepository restaurantSearchRepository;
+	private FoodDetailsSearchRepository foodDetailsSearchRepository;
 	
 	@Override
 	public Page<RestaurantModel> findByAreaRatingBudgetDAO(String area, float rating, float minimumOrderPrice,
@@ -54,6 +57,18 @@ public class SearchDaoImpl implements SearchDao {
 			float distance, double latitude, double longitude, Pageable page) {
 		
 		return restaurantSearchRepository.findByLonLatRatingBudget(cuisineType, rating, minimumOrderPrice, distance, latitude, longitude, page);
+	}
+
+	@Override
+	public Page<FoodDetails> getFoodDetailsByRestaurantIdDAO(String resId, Pageable page) {
+		
+		return foodDetailsSearchRepository.getFoodDetailsByRestaurantId(resId, page);
+	}
+
+	@Override
+	public Page<FoodDetails> getFoodDetailsByRestaurantIdAndFoodIdDAO(String resId, String foodId, Pageable page) {
+		
+		return foodDetailsSearchRepository.getFoodDetailsByRestaurantIdAndFoodId(resId, foodId, page);
 	}
 	
 }
