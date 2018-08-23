@@ -29,9 +29,10 @@ public interface RestaurantSearchRepository extends ElasticsearchRepository<Rest
 	@Query("{\"match\":{\"restaurant_id\":\"?0\"}}")
 	public Page<RestaurantModel> findById(String id, Pageable page);
 
-	// Getting restaurant details by location and distance
-	@Query("{\"bool\":{\"filter\":{\"geo_distance\":{\"distance\":\"?0km\",\"location\":{\"lat\":?1,\"lon\":?2}}}}}")
-	public Page<RestaurantModel> findByLonAndLat(float distance, double latitude, double longitude, Pageable page);
+	// Getting restaurant details by location, distance, rating & budget 
+	@Query("{\"bool\":{\"must\":[{\"range\":{\"rating\":{\"lte\":5,\"gte\":?0}}},{\"range\":{\"minimum_order_price\":{\"gte\":?1}}}],\"filter\":{\"geo_distance\":{\"distance\":\"?2km\",\"location\":{\"lat\":?3,\"lon\":?4}}}}}")
+	public Page<RestaurantModel> findByLonAndLat(float rating, float minimumOrderPrice, float distance, double latitude,
+			double longitude, Pageable page);
 
 	// Getting restaurant details by restaurant name, location & distance
 	@Query("{\"bool\":{\"must\":[{\"match\":{\"restaurant_name\":\"?0\"}},{\"match_phrase\":{\"restaurant_name\":\"?0\"}}],\"filter\":{\"geo_distance\":{\"distance\":\"?1km\",\"location\":{\"lat\":?2,\"lon\":?3}}}}}")

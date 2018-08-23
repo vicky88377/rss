@@ -37,9 +37,9 @@ public class SearchDaoImpl implements SearchDao {
 	}
 
 	@Override
-	public Page<RestaurantModel> findByLonAndLatDAO(float distance, double latitude, double longitude, Pageable page) {
+	public Page<RestaurantModel> findByLonAndLatDAO(float rating, float minimumOrderPrice, float distance, double latitude, double longitude, Pageable page) {
 		
-		return restaurantSearchRepository.findByLonAndLat(distance, latitude, longitude, page);
+		return restaurantSearchRepository.findByLonAndLat(rating, minimumOrderPrice, distance, latitude, longitude, page);
 	}
 
 	@Override

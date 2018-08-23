@@ -17,7 +17,7 @@ public interface SearchDao {
 	
 	public Page<RestaurantModel> findByIdDAO(String id, Pageable page);
 	
-	public Page<RestaurantModel> findByLonAndLatDAO(float distance, double latitude, double longitude, Pageable page);
+	public Page<RestaurantModel> findByLonAndLatDAO(float rating, float minimumOrderPrice,float distance, double latitude, double longitude, Pageable page);
 
 	public Page<RestaurantModel> findByLonLatAndNameDAO(String restaurantName, float distance, double latitude,
 			double longitude, Pageable page);
