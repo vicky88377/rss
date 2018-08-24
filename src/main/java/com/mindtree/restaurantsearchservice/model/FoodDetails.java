@@ -24,8 +24,9 @@ public class FoodDetails {
 	@JsonProperty("availability_status")
 	private String availabilityStatus;
 	
-	@JsonProperty("Restuarant Id")
-	private String restuarantId;
+
+	@JsonProperty("restaurant_id")
+	private String restaurantId;
 	
 	@JsonProperty("cuisines_id")
 	private String cuisineId;
@@ -108,16 +109,16 @@ public class FoodDetails {
 	/**
 	 * @return the restuarantId
 	 */
-	public String getRestuarantId() {
-		return restuarantId;
+	public String getRestaurantId() {
+		return restaurantId;
 	}
 
 	/**
 	 * @param restuarantId
 	 *            the restuarantId to set
 	 */
-	public void setRestuarantId(String restuarantId) {
-		this.restuarantId = restuarantId;
+	public void setRestaurantId(String restaurantId) {
+		this.restaurantId = restaurantId;
 	}
 
 	/**
