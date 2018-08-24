@@ -6,18 +6,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-
-import com.mindtree.restaurantsearchservice.controller.RestaurantSearchController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.mindtree.restaurantsearchservice.dao.SearchDao;
 import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
 
 @Component
 public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInterface {
-      
+
 	private static final Logger logger = LoggerFactory.getLogger(RestaurantSearchServiceImpl.class);
 	@Autowired
-	 SearchDao restaurantRepo;
+	SearchDao restaurantRepo;
 
 	@Value("${restaurant.page.size}")
 	private Integer pageSize;
@@ -27,12 +27,12 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 			float rating, String name, int pageNo) {
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		Page<RestaurantModel> data = null;
-		if(logger.isDebugEnabled()) {
-		logger.debug("param data: area: "+location+" cuisine: "+cuisine+" budget: "+budget+" rating: "+rating
-				+" restauratnName: "+name+" pageNo: "+pageNo);
+		if (logger.isDebugEnabled()) {
+			logger.debug("param data: area: " + location + " cuisine: " + cuisine + " budget: " + budget + " rating: "
+					+ rating + " restauratnName: " + name + " pageNo: " + pageNo);
 		}
 		if (name != null && !name.isEmpty()) {
-			data=restaurantRepo.findByAreaAndNameDAO(location, name, pageable);
+			data = restaurantRepo.findByAreaAndNameDAO(location, name, pageable);
 		} else if (cuisine != null && !cuisine.isEmpty()) {
 
 			data = restaurantRepo.findByAreaAndCuisineDAO(location, cuisine, rating, budget, pageable);
@@ -40,22 +40,22 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 			// fetch all restaurant based on default condition
 			data = restaurantRepo.findByAreaRatingBudgetDAO(location, rating, budget, pageable);
 		}
-		if(data!=null && logger.isDebugEnabled()) {
-		logger.debug("response data: "+data.getContent());
+		if (data != null && logger.isDebugEnabled()) {
+			logger.debug("response data: " + data.getContent());
 		}
 		return data;
 	}
 
 	@Override
 	public Page<RestaurantModel> getRestaurantByArea(String location, int pageNo) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("params data: location: "+location+" pageNo:"+pageNo);
+		if (logger.isDebugEnabled()) {
+			logger.debug("params data: location: " + location + " pageNo:" + pageNo);
 		}
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		float rating=0, budget=0;
+		float rating = 0, budget = 0;
 		Page<RestaurantModel> data = restaurantRepo.findByAreaRatingBudgetDAO(location, rating, budget, pageable);
-		if(data!=null && logger.isDebugEnabled()) {
-			logger.debug("response data: data: "+data.getContent());
+		if (data != null && logger.isDebugEnabled()) {
+			logger.debug("response data: data: " + data.getContent());
 		}
 		return data;
 	}
@@ -73,8 +73,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 			data = restaurantRepo.findByLonLatRatingBudgetDAO(cuisine, rating, budget, distance, latitude, longitude,
 					pageable);
 		} else {
-			data = restaurantRepo.findByLonAndLatDAO(rating, budget, distance, latitude, longitude,
-					pageable);
+			data = restaurantRepo.findByLonAndLatDAO(rating, budget, distance, latitude, longitude, pageable);
 		}
 		return data;
 	}
@@ -91,9 +90,9 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 
 	@Override
 	public RestaurantModel getResaurantById(String resId) {
-		
+
 		RestaurantModel data = restaurantRepo.findByIdDAO(resId);
-		
+
 		return data;
 	}
 
@@ -102,8 +101,8 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		RestaurantModel data = restaurantRepo.findByIdDAO(resId);
 		double lat = data.getLatitude();
 		double lon = data.getLongitude();
-		double distance = Math.sqrt( Math.pow((latitude - lat), 2)+Math.pow((longitude-lon),2) );
-		if(distance <= 5) {
+		double distance = Math.sqrt(Math.pow((latitude - lat), 2) + Math.pow((longitude - lon), 2));
+		if (distance <= 5) {
 			return true;
 		}
 		return false;
@@ -111,7 +110,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 
 	@Override
 	public FoodDetails getFoodDetailsOfARestuarant(String resId, String foodId) {
-	
+
 		return restaurantRepo.getFoodDetailsByRestaurantIdAndFoodIdDAO(resId, foodId);
 	}
 
