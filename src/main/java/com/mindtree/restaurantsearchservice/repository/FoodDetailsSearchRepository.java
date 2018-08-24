@@ -14,7 +14,7 @@ public interface FoodDetailsSearchRepository extends ElasticsearchRepository<Foo
 	public Page<FoodDetails> getFoodDetailsByRestaurantId(String resId, Pageable page);
 	
 	// search single food detail of a single restaurant using restaurant id and food id
-	@Query("{\"bool\":{\"must\":[{\"match\":{\"restaurant_id\":\"7304307\"}},{\"match\":{\"foodId\":\"44\"}}]}}")
+	@Query("{\"bool\":{\"must\":[{\"match\":{\"restaurant_id\":\"?0\"}},{\"match\":{\"foodId\":\"?1\"}}]}}")
 	public FoodDetails getFoodDetailsByRestaurantIdAndFoodId(String resId, String foodId);
 	
 }
