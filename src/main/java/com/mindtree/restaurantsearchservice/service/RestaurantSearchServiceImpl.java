@@ -1,7 +1,5 @@
 package com.mindtree.restaurantsearchservice.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -13,7 +11,6 @@ import com.mindtree.restaurantsearchservice.controller.RestaurantSearchControlle
 import com.mindtree.restaurantsearchservice.dao.SearchDao;
 import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
-import com.mindtree.restaurantsearchservice.repository.RestaurantSearchRepository;
 
 @Component
 public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInterface {
@@ -22,8 +19,8 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 	@Autowired
 	 SearchDao restaurantRepo;
 
-	@Value("$restaurant.page.size")
-	private int pageSize;
+	@Value("${restaurant.page.size}")
+	private Integer pageSize;
 
 	@Override
 	public Page<RestaurantModel> getRestaurantByAreaAndFilterParam(String location, String cuisine, float budget,
@@ -79,7 +76,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 			data = restaurantRepo.findByLonAndLatDAO(rating, budget, distance, latitude, longitude,
 					pageable);
 		}
-		return null;
+		return data;
 	}
 
 	@Override
@@ -101,8 +98,14 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 	}
 
 	@Override
-	public boolean validateDeliveryAddress(String resId, String latitude, String longitude) {
-		// TODO Auto-generated method stub
+	public boolean validateDeliveryAddress(String resId, double latitude, double longitude) {
+		RestaurantModel data = restaurantRepo.findByIdDAO(resId);
+		double lat = data.getLatitude();
+		double lon = data.getLongitude();
+		double distance = Math.sqrt( Math.pow((latitude - lat), 2)+Math.pow((longitude-lon),2) );
+		if(distance <= 5) {
+			return true;
+		}
 		return false;
 	}
 
