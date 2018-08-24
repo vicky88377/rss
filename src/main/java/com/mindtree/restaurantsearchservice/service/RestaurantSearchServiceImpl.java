@@ -64,6 +64,11 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 	public Page<RestaurantModel> getRestaurantByLocationAndFilterParam(double latitude, double longitude,
 			float distance, String cuisine, float budget, float rating, String name, int pageNo) {
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		if (logger.isDebugEnabled()) {
+			logger.debug("param data: latitude: "+latitude+" longitude: "+longitude + " cuisine: " + cuisine + 
+					" budget: " + budget + " rating: "
+					+ rating + " restauratnName: " + name + " pageNo: " + pageNo);
+		}
 		Page<RestaurantModel> data = null;
 		if (name != null && !name.isEmpty()) {
 			data = restaurantRepo.findByLonLatAndNameDAO(name, distance, latitude, longitude, pageable);
@@ -75,6 +80,9 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		} else {
 			data = restaurantRepo.findByLonAndLatDAO(rating, budget, distance, latitude, longitude, pageable);
 		}
+		if (data != null && logger.isDebugEnabled()) {
+			logger.debug("response data: data: " + data.getContent());
+		}
 		return data;
 	}
 
@@ -83,22 +91,36 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 			int pageNo) {
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		float rating = 0, budget = 0;
+		if (logger.isDebugEnabled()) {
+			logger.debug("param data: latitude: "+latitude+" longitude: "+longitude + 
+					" distance: "+ distance +" pageNo: " + pageNo);
+		}
 		Page<RestaurantModel> data = restaurantRepo.findByLonAndLatDAO(rating, budget, distance, latitude, longitude,
 				pageable);
+		if (data != null && logger.isDebugEnabled()) {
+			logger.debug("response data: data: " + data.getContent());
+		}
 		return data;
 	}
 
 	@Override
 	public RestaurantModel getResaurantById(String resId) {
-
+		if (logger.isDebugEnabled()) {
+			logger.debug("param data: resId: "+resId);
+		}
 		RestaurantModel data = restaurantRepo.findByIdDAO(resId);
-
+		if (data != null && logger.isDebugEnabled()) {
+			logger.debug("response data: data: " + data);
+		}
 		return data;
 	}
 
 	@Override
 	public boolean validateDeliveryAddress(String resId, double latitude, double longitude) {
 		RestaurantModel data = restaurantRepo.findByIdDAO(resId);
+		if (logger.isDebugEnabled()) {
+			logger.debug("param data: latitude: "+latitude+" longitude: "+ longitude);
+		}
 		double lat = data.getLatitude();
 		double lon = data.getLongitude();
 		double distance = Math.sqrt(Math.pow((latitude - lat), 2) + Math.pow((longitude - lon), 2));
@@ -110,12 +132,17 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 
 	@Override
 	public FoodDetails getFoodDetailsOfARestuarant(String resId, String foodId) {
-
+		if (logger.isDebugEnabled()) {
+			logger.debug("param data: resId: "+resId+" foodId: "+ foodId);
+		}
 		return restaurantRepo.getFoodDetailsByRestaurantIdAndFoodIdDAO(resId, foodId);
 	}
 
 	@Override
 	public Page<FoodDetails> getAllFoodDetailsByRestaurantId(String resId, int pageNo) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("param data: resId: "+resId);
+		}
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		return restaurantRepo.getFoodDetailsByRestaurantIdDAO(resId, pageable);
 	}
