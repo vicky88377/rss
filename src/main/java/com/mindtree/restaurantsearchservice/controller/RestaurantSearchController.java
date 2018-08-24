@@ -36,7 +36,7 @@ public class RestaurantSearchController {
 		Page<RestaurantModel> data = service.getRestaurantByAreaAndFilterParam(area, cuisine, budget, rating, name,
 				page);
 
-		return createResponse(data);
+		return createResponseRestaurant(data);
 	}
 
 	@GetMapping("/search/{latitude}/{longitude}")
@@ -54,7 +54,7 @@ public class RestaurantSearchController {
 		Page<RestaurantModel> data = service.getRestaurantByLocationAndFilterParam(latitude, longitude, distance,
 				cuisine, budget, rating, name, page);
 
-		return createResponse(data);
+		return createResponseRestaurant(data);
 	}
 
 	@GetMapping("{restaurant_id}")
@@ -68,11 +68,15 @@ public class RestaurantSearchController {
 	}
 
 	@GetMapping("/{restaurant_id}/food/{food_id}")
-	public ResponseStatusModel getFoodDetailsByFoodId(@RequestParam("restaurant_id") String restaurantId,
-			@RequestParam("food_id") String foodId) {
+	public ResponseStatusModel getFoodDetailsByFoodId(@PathVariable("restaurant_id") String restaurantId,
+			@PathVariable("food_id") String foodId) {
 		if (logger.isDebugEnabled()) {
+			logger.debug("getting food details of restaurant id="+restaurantId+" , food id="+foodId);
 		}
 		FoodDetails data = service.getFoodDetailsOfARestuarant(restaurantId, foodId);
+		if(logger.isDebugEnabled()) {
+			logger.debug("Food Details"+data);
+		}
 		return createResponse(data);
 	}
 
@@ -84,7 +88,7 @@ public class RestaurantSearchController {
 		ResponseStatusModel status=new ResponseStatusModel();
 		if(data==false) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Creating Failure Response");
+				logger.debug("No Data Available");
 			}
 			status.setMessage("Delivery is not available for your area");
 			status.setStatusCode(401);
@@ -100,12 +104,21 @@ public class RestaurantSearchController {
 		}
 		return status;
 	}
+	
+	@GetMapping("/{restaurant_id}/menu")
+	public ResponseStatusModel getFoodDetailsByRestaurantId(@PathVariable("restaurant_id")String restaurantId,@RequestParam(name="page",required=false,defaultValue="0") Integer pageNo) {
+			if(logger.isDebugEnabled()) {
+				logger.debug("getting food details of restaurant id="+restaurantId+" , page="+pageNo);
+			}
+			Page<FoodDetails> data = service.getAllFoodDetailsByRestaurantId(restaurantId, pageNo);
+		return createResponseFoodMenu(data);
+	}
 
 	private ResponseStatusModel createResponse(Object data) {
 		ResponseStatusModel status=new ResponseStatusModel();
 		if(data==null) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Creating Failure Response");
+				logger.debug("No Data Available");
 			}
 			status.setMessage("No Data Found");
 			status.setStatusCode(401);
@@ -122,7 +135,7 @@ public class RestaurantSearchController {
 		return status;
 	}
 	
-	private ResponseStatusModel createResponse(Page<RestaurantModel> data) {
+	private ResponseStatusModel createResponseRestaurant(Page<RestaurantModel> data) {
 		ResponseStatusModel responseStatus = new ResponseStatusModel();
 		if (!data.getContent().isEmpty()) {
 			if (logger.isDebugEnabled()) {
@@ -133,7 +146,26 @@ public class RestaurantSearchController {
 			responseStatus.setStatus("SUCCESS");
 		} else {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Creating Failure Response");
+				logger.debug("No Data Available");
+			}
+			responseStatus.setStatusCode(401);
+			responseStatus.setStatus("SUCCESS");
+			responseStatus.setMessage("No Data Found");
+		}
+		return responseStatus;
+	}
+	private ResponseStatusModel createResponseFoodMenu(Page<FoodDetails> data) {
+		ResponseStatusModel responseStatus = new ResponseStatusModel();
+		if (!data.getContent().isEmpty()) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Creating Success Response");
+			}
+			responseStatus.setData(data);
+			responseStatus.setStatusCode(200);
+			responseStatus.setStatus("SUCCESS");
+		} else {
+			if (logger.isDebugEnabled()) {
+				logger.debug("No Data Available");
 			}
 			responseStatus.setStatusCode(401);
 			responseStatus.setStatus("SUCCESS");
