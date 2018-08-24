@@ -100,6 +100,15 @@ public class RestaurantSearchController {
 		}
 		return status;
 	}
+	
+	@GetMapping("/{restaurant_id/menu}")
+	public ResponseStatusModel getFoodDetailsByRestaurantId(@PathVariable("restaurant_id")String restaurantId,@RequestParam("page") Integer pageNo) {
+			if(logger.isDebugEnabled()) {
+				logger.debug("getting food details of restaurant id="+restaurantId+" , page="+pageNo);
+			}
+			Page<FoodDetails> data = service.getAllFoodDetailsByRestaurantId(restaurantId, pageNo);
+		return createResponse(data);
+	}
 
 	private ResponseStatusModel createResponse(Object data) {
 		ResponseStatusModel status=new ResponseStatusModel();
