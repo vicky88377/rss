@@ -24,7 +24,7 @@ public class FoodDetails {
 	@JsonProperty("availability_status")
 	private String availabilityStatus;
 	
-	@JsonProperty("restuarant_id")
+	@JsonProperty("Restuarant Id")
 	private String restuarantId;
 	
 	@JsonProperty("cuisines_id")
