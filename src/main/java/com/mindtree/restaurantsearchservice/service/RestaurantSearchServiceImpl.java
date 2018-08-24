@@ -1,5 +1,7 @@
 package com.mindtree.restaurantsearchservice.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -7,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import com.mindtree.restaurantsearchservice.controller.RestaurantSearchController;
 import com.mindtree.restaurantsearchservice.dao.SearchDao;
 import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
@@ -14,7 +17,8 @@ import com.mindtree.restaurantsearchservice.repository.RestaurantSearchRepositor
 
 @Component
 public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInterface {
-
+      
+	private static final Logger logger = LoggerFactory.getLogger(RestaurantSearchServiceImpl.class);
 	@Autowired
 	 SearchDao restaurantRepo;
 
@@ -26,6 +30,10 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 			float rating, String name, int pageNo) {
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		Page<RestaurantModel> data = null;
+		if(logger.isDebugEnabled()) {
+		logger.debug("param data: area: "+location+" cuisine: "+cuisine+" budget: "+budget+" rating: "+rating
+				+" restauratnName: "+name+" pageNo: "+pageNo);
+		}
 		if (name != null && !name.isEmpty()) {
 			data=restaurantRepo.findByAreaAndNameDAO(location, name, pageable);
 		} else if (cuisine != null && !cuisine.isEmpty()) {
@@ -35,15 +43,23 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 			// fetch all restaurant based on default condition
 			data = restaurantRepo.findByAreaRatingBudgetDAO(location, rating, budget, pageable);
 		}
+		if(data!=null && logger.isDebugEnabled()) {
+		logger.debug("response data: "+data.getContent());
+		}
 		return data;
 	}
 
 	@Override
 	public Page<RestaurantModel> getRestaurantByArea(String location, int pageNo) {
-		// TODO Auto-generated method stub
+		if(logger.isDebugEnabled()) {
+			logger.debug("params data: location: "+location+" pageNo:"+pageNo);
+		}
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		float rating=0, budget=0;
 		Page<RestaurantModel> data = restaurantRepo.findByAreaRatingBudgetDAO(location, rating, budget, pageable);
+		if(data!=null && logger.isDebugEnabled()) {
+			logger.debug("response data: data: "+data.getContent());
+		}
 		return data;
 	}
 
