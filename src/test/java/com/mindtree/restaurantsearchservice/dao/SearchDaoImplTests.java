@@ -127,4 +127,31 @@ public class SearchDaoImplTests {
 
 		assertEquals(expectedResult, restaurantSearchRepo.findById("1"));
 	}
+	
+	//Unit test cases to find restaurant details by longitude,latitude,rating, minimum order price & distance
+	@Test
+	public void findByLonAndLatDAOSuccess() throws Exception {
+		Mockito.when(restaurantSearchRepo.findByLonAndLat(Matchers.anyFloat(), Matchers.anyFloat(), Matchers.anyFloat(),
+				Matchers.anyDouble(), Matchers.anyDouble(), Matchers.anyObject())).thenReturn(expectedResult);
+		assertEquals(expectedResult, restaurantSearchRepo.findByLonAndLat(3, 200, 1, 77.6993861, 12.94993396, page));
+	}
+	
+	//Unit test cases to find restaurant details by Restaurant name,distance,longitude & latitude
+	@Test
+	public void findByLonLatAndNameDAOSuccess() throws Exception {
+		Mockito.when(restaurantSearchRepo.findByLonLatAndName(Matchers.anyString(), Matchers.anyFloat(),
+				Matchers.anyDouble(), Matchers.anyDouble(), Matchers.anyObject())).thenReturn(expectedResult);
+		assertEquals(expectedResult, restaurantSearchRepo.findByLonLatAndName("AB's - Absolute Barbecues", 1,
+				77.6993861, 12.94993396, page));
+	}
+	
+	//Unit test cases to find restaurant details by cusine type, rating, minimum order price, longitude,latitude & distance
+	@Test
+	public void findByLonLatRatingBudgetDAOSuccess() throws Exception {
+		Mockito.when(restaurantSearchRepo.findByLonLatRatingBudget(Matchers.anyString(), Matchers.anyFloat(),
+				Matchers.anyFloat(), Matchers.anyFloat(), Matchers.anyDouble(), Matchers.anyDouble(),
+				Matchers.anyObject())).thenReturn(expectedResult);
+		assertEquals(expectedResult, restaurantSearchRepo.findByLonLatRatingBudget("North Indian", 3, 200, 1,
+				77.6993861, 12.94993396, page));
+	}
 }
