@@ -33,7 +33,6 @@ public class RestaurantSearchController {
 			@RequestParam(required = false, defaultValue = "0") Float rating,
 			@RequestParam(required = false, defaultValue = "0") Float budget,
 			@RequestParam(required = false) String cuisine) {
-		List<RestaurantModel> restaurants =null;
 		ResponseStatusModel resp=null;
 		if (logger.isDebugEnabled()) {
 			logger.debug("searching restaurant with area=" + area + " with name=" + name + ",page=" + page + ",rating="
@@ -43,8 +42,8 @@ public class RestaurantSearchController {
 				page);
 		
 		if (data != null) {
-			restaurants = createLinks(data.getContent());
-			resp=createResponseRestaurant(data,restaurants);
+			createLinksForRestaurant(data.getContent());
+			resp=createGenericResponse(data);
 		}
 		
 		return resp;
@@ -58,7 +57,6 @@ public class RestaurantSearchController {
 			@RequestParam(required = false, defaultValue = "0") Float budget,
 			@RequestParam(required = false) String cuisine,
 			@RequestParam(required = false, defaultValue = "1") Float distance) {
-		List<RestaurantModel> restaurants =null;
 		ResponseStatusModel resp=null;
 		if (logger.isDebugEnabled()) {
 			logger.debug("searching restaurant with latitude,longitude=" + latitude + "," + longitude + " with name="
@@ -67,8 +65,8 @@ public class RestaurantSearchController {
 		Page<RestaurantModel> data = service.getRestaurantByLocationAndFilterParam(latitude, longitude, distance,
 				cuisine, budget, rating, name, page);
 		if (data != null) {
-			restaurants = createLinks(data.getContent());
-			resp=createResponseRestaurant(data,restaurants);
+			createLinksForRestaurant(data.getContent());
+			resp=createGenericResponse(data);
 		}
 		
 		return resp;
@@ -80,8 +78,13 @@ public class RestaurantSearchController {
 			logger.debug("getting restaurant details of restaurant id=" + restaurantId);
 		}
 		RestaurantModel data = service.getResaurantById(restaurantId);
-
-		return createResponse(data);
+		if(data!=null) {
+		Link getAllFood = ControllerLinkBuilder.linkTo(ControllerLinkBuilder
+				.methodOn(RestaurantSearchController.class).getFoodDetailsByRestaurantId(data.getRestaurantId(), 0))
+				.withRel("FoodMenu");
+		data.add(getAllFood);
+		}
+		return createGenericResponse(data);
 	}
 
 	@GetMapping("/{restaurant_id}/food/{food_id}")
@@ -94,7 +97,7 @@ public class RestaurantSearchController {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Food Details" + data);
 		}
-		return createResponse(data);
+		return createGenericResponse(data);
 	}
 
 	@GetMapping("/{restaurant_id}/validate/{latitude}/{longitude}")
@@ -126,61 +129,47 @@ public class RestaurantSearchController {
 	@GetMapping("/{restaurant_id}/menu")
 	public ResponseStatusModel getFoodDetailsByRestaurantId(@PathVariable("restaurant_id") String restaurantId,
 			@RequestParam(name = "page", required = false, defaultValue = "0") Integer pageNo) {
+		ResponseStatusModel resp= null;
 		if (logger.isDebugEnabled()) {
 			logger.debug("getting food details of restaurant id=" + restaurantId + " , page=" + pageNo);
 		}
 		Page<FoodDetails> data = service.getAllFoodDetailsByRestaurantId(restaurantId, pageNo);
-		return createResponseFoodMenu(data);
-	}
-
-	private ResponseStatusModel createResponse(Object data) {
-		ResponseStatusModel status = new ResponseStatusModel();
-		if (data == null) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("No Data Available");
-			}
-			status.setMessage("No Data Found");
-			status.setStatusCode(401);
-			status.setStatus("SUCCESS");
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Creating Success Response");
-			}
-			status.setMessage("Data Found");
-			status.setStatusCode(200);
-			status.setStatus("SUCCESS");
-			status.setData(data);
+		if(data!=null) {
+			createLinksForFood(data.getContent());
+			resp = createGenericResponse(data);
 		}
-		return status;
+		return resp;
 	}
 
-	private ResponseStatusModel createResponseRestaurant(Page<RestaurantModel> data,List<RestaurantModel> list) {
-		ResponseStatusModel responseStatus = new ResponseStatusModel();
-		if (!data.getContent().isEmpty()) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Creating Success Response");
-			}
-			responseStatus.setData(list);
-			responseStatus.setStatusCode(200);
-			responseStatus.setStatus("SUCCESS");
-			responseStatus.setCurrentPageNo(data.getNumber());
-			responseStatus.setSize(data.getSize());
-			responseStatus.setTotalPages(data.getTotalPages());
-			responseStatus.setElements(data.getNumberOfElements());
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("No Data Available");
-			}
-			responseStatus.setStatusCode(401);
-			responseStatus.setStatus("SUCCESS");
-			responseStatus.setMessage("No Data Found");
+
+	private List<RestaurantModel> createLinksForRestaurant(List<RestaurantModel> data) {
+		for (RestaurantModel r : data) {
+			String restaurantId = r.getRestaurantId();
+			Link selfLink = ControllerLinkBuilder.linkTo(RestaurantSearchController.class).slash(restaurantId)
+					.withSelfRel();
+			Link getAllFood = ControllerLinkBuilder.linkTo(ControllerLinkBuilder
+					.methodOn(RestaurantSearchController.class).getFoodDetailsByRestaurantId(restaurantId, 0))
+					.withRel("FoodMenu");
+			r.add(selfLink, getAllFood);
 		}
-		return responseStatus;
+		return data;
 	}
-
-	private ResponseStatusModel createResponseFoodMenu(Page<FoodDetails> data) {
+	
+	private List<FoodDetails> createLinksForFood(List<FoodDetails> data) {
+		for (FoodDetails f : data) {
+			String restaurantId =f.getRestaurantId();
+			String foodId=f.getFoodId();
+			Link selfLink = ControllerLinkBuilder.linkTo(ControllerLinkBuilder
+					.methodOn(RestaurantSearchController.class).getFoodDetailsByFoodId(restaurantId, foodId))
+					.withSelfRel();
+			f.add(selfLink);
+		}
+		return data;
+	}
+	
+	private ResponseStatusModel createGenericResponse(Object data) {
 		ResponseStatusModel responseStatus = new ResponseStatusModel();
-		if (!data.getContent().isEmpty()) {
+		if (data!=null) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating Success Response");
 			}
@@ -196,19 +185,6 @@ public class RestaurantSearchController {
 			responseStatus.setMessage("No Data Found");
 		}
 		return responseStatus;
-	}
-
-	private List<RestaurantModel> createLinks(List<RestaurantModel> data) {
-		for (RestaurantModel r : data) {
-			String restaurantId = r.getRestaurantId();
-			Link selfLink = ControllerLinkBuilder.linkTo(RestaurantSearchController.class).slash(restaurantId)
-					.withSelfRel();
-			Link getAllFood = ControllerLinkBuilder.linkTo(ControllerLinkBuilder
-					.methodOn(RestaurantSearchController.class).getFoodDetailsByRestaurantId(restaurantId, 0))
-					.withRel("FoodMenu");
-			r.add(selfLink, getAllFood);
-		}
-		return data;
 	}
 
 }

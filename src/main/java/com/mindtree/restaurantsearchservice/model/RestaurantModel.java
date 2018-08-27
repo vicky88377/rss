@@ -5,54 +5,59 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.hateoas.ResourceSupport;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Document(indexName = "searchrestaurants", type = "restaurantinfo")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RestaurantModel extends ResourceSupport{
+@JsonInclude(Include.NON_EMPTY)
+public class RestaurantModel extends ResourceSupport {
 	@Id
 	@JsonProperty("restaurant_id")
 	private String restaurantId;
-	
+
 	@JsonProperty("restaurant_name")
 	private String restaurantName;
-	
+
 	@JsonProperty("start_time")
 	private String restaurantOpenTime;
-	
+
 	@JsonProperty("end_time")
 	private String restaurantCloseTime;
-	
+
 	@JsonProperty("minimum_order_price")
 	private float minimumOrder;
-	
+
 	@JsonProperty("average_delivery_time")
 	private String averageDeliveryTime;
-	
+
 	@JsonProperty("delivery_point")
 	private String deliveryPoint;
-	
+
 	@JsonProperty("display_image")
 	private String restaurantImage;
-	
+
 	private String address;
-	
+
 	private String city;
-	
+
 	private String state;
-	
+
 	private String country;
-	
+
 	private String locality;
-	
+	@JsonProperty("cuisen_type")
+	private String cuisine;
+
 	@JsonProperty("locality_verbose")
 	private String localityVerbose;
-	
+
 	private float rating;
-	
+
 	@JsonProperty("offer_info")
 	private String offer;
-	
+
 	private double latitude;
 	private double longitude;
 
@@ -326,17 +331,19 @@ public class RestaurantModel extends ResourceSupport{
 		this.longitude = longitude;
 	}
 
-	@Override
-	public String toString() {
-		return "RestaurantModel [restaurantId=" + restaurantId + ", restaurantName=" + restaurantName
-				+ ", restaurantOpenTime=" + restaurantOpenTime + ", restaurantCloseTime=" + restaurantCloseTime
-				+ ", minimumOrder=" + minimumOrder + ", averageDeliveryTime=" + averageDeliveryTime + ", deliveryPoint="
-				+ deliveryPoint + ", restaurantImage=" + restaurantImage + ", address=" + address + ", city=" + city
-				+ ", state=" + state + ", country=" + country + ", locality=" + locality + ", localityVerbose="
-				+ localityVerbose + ", rating=" + rating + ", offer=" + offer + ", latitude=" + latitude
-				+ ", longitude=" + longitude + "]";
+	/**
+	 * @return the cuisine
+	 */
+	public String getCuisine() {
+		return cuisine;
 	}
-	
-	
+
+	/**
+	 * @param cuisine
+	 *            the cuisine to set
+	 */
+	public void setCuisine(String cuisine) {
+		this.cuisine = cuisine;
+	}
 
 }
