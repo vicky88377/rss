@@ -5,15 +5,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ResponseStatusModel {
-	
+
 	@JsonProperty("status_code")
 	private int statusCode;
-	
 	private String status;
-	
 	@JsonProperty(required = false)
 	private String message;
-	
+	@JsonProperty(value = "current_page", required = false)
+	private int currentPageNo;
+	@JsonProperty(value = "total_page", required = false)
+	private int totalPages;
+	@JsonProperty(value = "elements", required = false)
+	private int elements;
+	private int size;
 	private Object data;
 
 	/**
@@ -76,4 +80,63 @@ public class ResponseStatusModel {
 		this.data = data;
 	}
 
+	/**
+	 * @return the currentPageNo
+	 */
+	public int getCurrentPageNo() {
+		return currentPageNo;
+	}
+
+	/**
+	 * @param currentPageNo
+	 *            the currentPageNo to set
+	 */
+	public void setCurrentPageNo(int currentPageNo) {
+		this.currentPageNo = currentPageNo;
+	}
+
+	/**
+	 * @return the totalPages
+	 */
+	public int getTotalPages() {
+		return totalPages;
+	}
+
+	/**
+	 * @param totalPages
+	 *            the totalPages to set
+	 */
+	public void setTotalPages(int totalPages) {
+		this.totalPages = totalPages;
+	}
+
+	/**
+	 * @return the elements
+	 */
+	public int getElements() {
+		return elements;
+	}
+
+	/**
+	 * @param elements
+	 *            the elements to set
+	 */
+	public void setElements(int elements) {
+		this.elements = elements;
+	}
+
+	/**
+	 * @return the size
+	 */
+	public int getSize() {
+		return size;
+	}
+
+	/**
+	 * @param size
+	 *            the size to set
+	 */
+	public void setSize(int size) {
+		this.size = size;
+	}
 }
