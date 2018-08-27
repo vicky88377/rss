@@ -2,13 +2,17 @@ package com.mindtree.restaurantsearchservice.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.hateoas.ResourceSupport;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Document(indexName="searchfood",type="foodmenu")
-public class FoodDetails {
+@JsonInclude(Include.NON_EMPTY)
+public class FoodDetails extends ResourceSupport{
 	@Id
 	@JsonProperty("foodId")
 	private String foodId;
@@ -24,6 +28,7 @@ public class FoodDetails {
 	@JsonProperty("availability_status")
 	private String availabilityStatus;
 	
+
 	@JsonProperty("restaurant_id")
 	private String restaurantId;
 	
