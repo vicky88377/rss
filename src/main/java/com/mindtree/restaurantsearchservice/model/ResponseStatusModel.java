@@ -1,19 +1,21 @@
 package com.mindtree.restaurantsearchservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_EMPTY)
+@JsonPropertyOrder({"status_code","status","message","data"})
 public class ResponseStatusModel {
-	
+
 	@JsonProperty("status_code")
 	private int statusCode;
-	
 	private String status;
-	
 	@JsonProperty(required = false)
 	private String message;
-	
 	private Object data;
 
 	/**
@@ -75,5 +77,6 @@ public class ResponseStatusModel {
 	public void setData(Object data) {
 		this.data = data;
 	}
+
 
 }
