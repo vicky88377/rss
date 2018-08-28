@@ -186,9 +186,8 @@ public class SearchDaoImplTests {
 	// Unit test cases to find food details by restaurantId & foodId
 	@Test
 	public void getFoodDetailsByRestaurantIdAndFoodIdDAOSuccess() throws Exception {
-		FoodDetails expectedFoodDetailsResult = foodDetails;
 		Mockito.when(foodSearchRepo.getFoodDetailsByRestaurantIdAndFoodId(Matchers.anyString(), Matchers.anyString()))
-				.thenReturn(expectedFoodDetailsResult);
+				.thenReturn(foodDetails);
 		assertEquals(expectedFoodDetailsResult, foodSearchRepo.getFoodDetailsByRestaurantIdAndFoodId("6310470", "14"));
 	}
 	
