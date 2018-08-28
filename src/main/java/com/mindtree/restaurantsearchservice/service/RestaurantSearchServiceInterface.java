@@ -13,7 +13,7 @@ public interface RestaurantSearchServiceInterface {
          
          public Page<RestaurantModel> getRestaurantByAreaAndFilterParam(String location,String cuisine,float budget,
         		 float rating,String name,int pageNo);
-         public Page<RestaurantModel> getRestaurantByArea(String location,int pageNo);
+         //public Page<RestaurantModel> getRestaurantByArea(String location,int pageNo);
          public Page<RestaurantModel> getRestaurantByLocationAndFilterParam(double latitude,double longitude,float distance,
         		 String cuisine,float budget,float rating,String name,int pageNo);
          public Page<RestaurantModel> getRestaurantByLocation(double latitude,double longitude,float distance,int pageNo);
@@ -22,6 +22,7 @@ public interface RestaurantSearchServiceInterface {
          public FoodDetails getFoodDetailsOfARestuarant(String  resId,String foodId);
          public boolean validateDeliveryAddress(String resId, double latitude, double longitude);
          public Page<FoodDetails> getAllFoodDetailsByRestaurantId(String resId,int pageNo);
+         public RestaurantModel updateRatingBasedOnRestaurantId(String resId,float rating);
          
          
          

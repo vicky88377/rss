@@ -82,4 +82,9 @@ public class SearchDaoImpl implements SearchDao {
 		return foodDetailsSearchRepository.getFoodDetailsByRestaurantIdAndFoodId(resId, foodId);
 	}
 	
+	@Override
+	public RestaurantModel updateRestaurantDetails(RestaurantModel model) {
+		return restaurantSearchRepository.save(model);
+	}
+	
 }

@@ -10,6 +10,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -137,6 +138,18 @@ public class RestaurantSearchController {
 			resp = createGenericResponse(data);
 		}
 		return resp;
+	}
+	
+	@PutMapping("/reviews/{restaurant_id}/{rating}")
+	public ResponseStatusModel updateRatingDetailOfRestaurant(@PathVariable("restaurant_id") String restaurantId,
+			@PathVariable("rating") float rating) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("getting food details of restaurant id=" + restaurantId + " , rating=" + rating);
+		}
+		
+		RestaurantModel resObj=service.updateRatingBasedOnRestaurantId(restaurantId, rating);
+		return createGenericResponse(resObj);
+		
 	}
 
 

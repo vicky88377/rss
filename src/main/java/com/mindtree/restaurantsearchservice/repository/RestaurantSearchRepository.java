@@ -44,5 +44,6 @@ public interface RestaurantSearchRepository extends ElasticsearchRepository<Rest
 	@Query("{\"bool\":{\"must\":[{\"multi_match\":{\"query\":\"North\",\"fields\":[\"cuisen_type\"],\"fuzziness\":2}},{\"range\":{\"rating\":{\"lte\":5,\"gte\":3}}},{\"range\":{\"minimum_order_price\":{\"gte\":200}}}],\"filter\":{\"geo_distance\":{\"distance\":\"1km\",\"location\":{\"lat\":77.696664,\"lon\":12.97537691}}}}},\"sort\":[{\"rating\":{\"order\":\"desc\"}}]")
 	public Page<RestaurantModel> findByLonLatRatingBudget(String cuisineType, float rating, float minimumOrderPrice,
 			float distance, double latitude, double longitude, Pageable page);
+	
 
 }

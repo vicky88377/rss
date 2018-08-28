@@ -18,7 +18,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 
 	private static final Logger logger = LoggerFactory.getLogger(RestaurantSearchServiceImpl.class);
 	@Autowired
-	SearchDao restaurantRepo;
+	SearchDao searchDao;
 
 	@Value("${restaurant.page.size}")
 	private Integer pageSize;
@@ -33,13 +33,13 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 					+ rating + " restauratnName: " + name + " pageNo: " + pageNo);
 		}
 		if (name != null && !name.isEmpty()) {
-			data = restaurantRepo.findByAreaAndNameDAO(location, name, pageable);
+			data = searchDao.findByAreaAndNameDAO(location, name, pageable);
 		} else if (cuisine != null && !cuisine.isEmpty()) {
 
-			data = restaurantRepo.findByAreaAndCuisineDAO(location, cuisine, rating, budget, pageable);
+			data = searchDao.findByAreaAndCuisineDAO(location, cuisine, rating, budget, pageable);
 		} else {
 			// fetch all restaurant based on default condition
-			data = restaurantRepo.findByAreaRatingBudgetDAO(location, rating, budget, pageable);
+			data = searchDao.findByAreaRatingBudgetDAO(location, rating, budget, pageable);
 		}
 		if (data != null && logger.isDebugEnabled()) {
 			logger.debug("response data: " + data.getContent());
@@ -47,7 +47,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		return data;
 	}
 
-	@Override
+	/*@Override
 	public Page<RestaurantModel> getRestaurantByArea(String location, int pageNo) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("params data: location: " + location + " pageNo:" + pageNo);
@@ -59,7 +59,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 			logger.debug("response data: data: " + data.getContent());
 		}
 		return data;
-	}
+	}*/
 
 	@Override
 	public Page<RestaurantModel> getRestaurantByLocationAndFilterParam(double latitude, double longitude,
@@ -72,14 +72,14 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		}
 		Page<RestaurantModel> data = null;
 		if (name != null && !name.isEmpty()) {
-			data = restaurantRepo.findByLonLatAndNameDAO(name, distance, latitude, longitude, pageable);
+			data = searchDao.findByLonLatAndNameDAO(name, distance, latitude, longitude, pageable);
 		} else if (cuisine != null && !cuisine.isEmpty()) {
 			// pass all the parameter to the repository to fetch restaurant based on cuisine
 			// and location
-			data = restaurantRepo.findByLonLatRatingBudgetDAO(cuisine, rating, budget, distance, latitude, longitude,
+			data = searchDao.findByLonLatRatingBudgetDAO(cuisine, rating, budget, distance, latitude, longitude,
 					pageable);
 		} else {
-			data = restaurantRepo.findByLonAndLatDAO(rating, budget, distance, latitude, longitude, pageable);
+			data = searchDao.findByLonAndLatDAO(rating, budget, distance, latitude, longitude, pageable);
 		}
 		if (data != null && logger.isDebugEnabled()) {
 			logger.debug("response data: data: " + data.getContent());
@@ -96,7 +96,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 			logger.debug("param data: latitude: "+latitude+" longitude: "+longitude + 
 					" distance: "+ distance +" pageNo: " + pageNo);
 		}
-		Page<RestaurantModel> data = restaurantRepo.findByLonAndLatDAO(rating, budget, distance, latitude, longitude,
+		Page<RestaurantModel> data = searchDao.findByLonAndLatDAO(rating, budget, distance, latitude, longitude,
 				pageable);
 		if (data != null && logger.isDebugEnabled()) {
 			logger.debug("response data: data: " + data.getContent());
@@ -109,7 +109,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		if (logger.isDebugEnabled()) {
 			logger.debug("param data: resId: "+resId);
 		}
-		RestaurantModel data = restaurantRepo.findByIdDAO(resId);
+		RestaurantModel data = searchDao.findByIdDAO(resId);
 		if (data != null && logger.isDebugEnabled()) {
 			logger.debug("response data: data: " + data);
 		}
@@ -118,7 +118,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 
 	@Override
 	public boolean validateDeliveryAddress(String resId, double latitude, double longitude) {
-		RestaurantModel data = restaurantRepo.findByIdDAO(resId);
+		RestaurantModel data = searchDao.findByIdDAO(resId);
 		if (logger.isDebugEnabled()) {
 			logger.debug("param data: latitude: "+latitude+" longitude: "+ longitude);
 		}
@@ -136,7 +136,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		if (logger.isDebugEnabled()) {
 			logger.debug("param data: resId: "+resId+" foodId: "+ foodId);
 		}
-		return restaurantRepo.getFoodDetailsByRestaurantIdAndFoodIdDAO(resId, foodId);
+		return searchDao.getFoodDetailsByRestaurantIdAndFoodIdDAO(resId, foodId);
 	}
 
 	@Override
@@ -145,7 +145,15 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 			logger.debug("param data: resId: "+resId);
 		}
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		return restaurantRepo.getFoodDetailsByRestaurantIdDAO(resId, pageable);
+		return searchDao.getFoodDetailsByRestaurantIdDAO(resId, pageable);
+	}
+
+	@Override
+	public RestaurantModel updateRatingBasedOnRestaurantId(String resId, float rating) {
+		RestaurantModel resObj=searchDao.findByIdDAO(resId);
+		resObj.setRating(rating);
+		RestaurantModel resObj1=searchDao.updateRestaurantDetails(resObj);
+		return resObj1;
 	}
 
 }
