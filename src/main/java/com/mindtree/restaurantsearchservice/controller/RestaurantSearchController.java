@@ -135,11 +135,8 @@ public class RestaurantSearchController {
 			logger.debug("getting food details of restaurant id=" + restaurantId);
 		}
 		List<FoodDetails> data = service.getAllFoodDetailsByRestaurantId(restaurantId);
-		if(data!=null) {
-			createLinksForFood(data);
-			resp = createGenericResponse(data);
-		}
-		return resp;
+		
+		return createGenericResponse(data);
 	}
 	
 	@PutMapping("/reviews/{restaurant_id}/{rating}")

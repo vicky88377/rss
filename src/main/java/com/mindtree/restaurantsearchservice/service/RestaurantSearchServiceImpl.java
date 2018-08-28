@@ -138,7 +138,12 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		if (logger.isDebugEnabled()) {
 			logger.debug("param data: resId: "+resId+" foodId: "+ foodId);
 		}
+		if(resId!=null && foodId!=null && !resId.isEmpty() && !foodId.isEmpty()) {
 		return searchDao.getFoodDetailsByRestaurantIdAndFoodIdDAO(resId, foodId);
+		}
+		else {
+			return null;
+		}
 	}
 
 	@Override
@@ -146,7 +151,12 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		if (logger.isDebugEnabled()) {
 			logger.debug("param data: resId: "+resId);
 		}
+		if(resId!=null && !resId.isEmpty()) {
 		return searchDao.getFoodDetailsByRestaurantIdDAO(resId);
+		}
+		else {
+			return null;
+		}
 	}
 
 	@Override

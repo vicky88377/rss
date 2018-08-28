@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.mindtree.restaurantsearchservice.dao.SearchDao;
+import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
 import com.mindtree.restaurantsearchservice.service.RestaurantSearchServiceImpl;
 import com.mindtree.restaurantsearchservice.service.RestaurantSearchServiceInterface;
@@ -38,7 +39,10 @@ public class RestaurantSearchServiceImplTest {
 	RestaurantModel resObj= new RestaurantModel();
 	RestaurantModel resObj2= new RestaurantModel();
 	List<RestaurantModel> resList= new ArrayList<>(); 
-	Page< RestaurantModel> resModel=null;
+	FoodDetails foodDetails= new FoodDetails();
+	List<FoodDetails> foodList= new ArrayList<>();
+	Page<FoodDetails> pageFood=null;
+	Page<RestaurantModel> resModel=null;
 	
 	@Before
 	public void setup() {
@@ -77,6 +81,18 @@ public class RestaurantSearchServiceImplTest {
 		resList.add(resObj);
 		resList.add(resObj2);
 	    resModel= new PageImpl<>(resList);
+	    
+	    foodDetails.setCuisineId("14");
+		foodDetails.setAvailabilityStatus("1");
+		foodDetails.setDescription("cooked flesh high spice");
+		foodDetails.setFoodId("14");
+		foodDetails.setFoodName("grill");
+		foodDetails.setFoodPrice(242);
+		foodDetails.setRestaurantId("6310470");
+		foodList.add(foodDetails);
+		pageFood = PageRequest.of(0, 10);
+		
+		pageFood = new PageImpl<>(foodList);
 	}
 	@Test
 	public void getRestaurantByAreaAndCuisine () {
@@ -111,4 +127,70 @@ public class RestaurantSearchServiceImplTest {
 		Page<RestaurantModel> resPageObj= restInterface.getRestaurantByAreaAndFilterParam("Banglore", null,200,3, null, 0);
 		Assert.assertEquals("Success",2,resPageObj.getContent().size());
 	}
+	
+	
+	@Test
+	public void getRestaurantByLocationAndCuisine() {
+		Mockito.when(searchDao.findByLonLatRatingBudgetDAO(Matchers.anyString(),Matchers.anyFloat(),Matchers.anyFloat(),
+				Matchers.anyFloat(), Matchers.anyDouble(),Matchers.anyDouble(), Matchers.any()))
+		.thenReturn(resModel);
+		Page<RestaurantModel> resPageObj=restInterface.getRestaurantByLocationAndFilterParam(0, 0, 0,
+				"North", 0, 0, null, 0);
+		Assert.assertEquals("Success","3100153",resPageObj.getContent().get(0).getRestaurantId());
+	}
+	
+	@Test
+	public void getRestaurantByLocationAndName() {
+		Mockito.when(searchDao.findByLonLatAndNameDAO(Matchers.anyString(),Matchers.anyFloat(), Matchers.anyDouble(),
+				Matchers.anyDouble(), Matchers.any()))
+		.thenReturn(resModel);
+		Page<RestaurantModel> resPageObj=restInterface.getRestaurantByLocationAndFilterParam(0, 0, 0,
+				null, 0, 0, "Maharaja Restaurant", 0);
+		Assert.assertEquals("Success","Maharaja Restaurant",resPageObj.getContent().get(0).getRestaurantName());
+	}
+	
+	@Test
+	public void getRestaurantByLocationRatingAndCuisine() {
+		Mockito.when(searchDao.findByLonAndLatDAO(Matchers.anyFloat(),Matchers.anyFloat(),
+				Matchers.anyFloat(), Matchers.anyDouble(),Matchers.anyDouble(), Matchers.any()))
+		.thenReturn(resModel);
+		Page<RestaurantModel> resPageObj=restInterface.getRestaurantByLocationAndFilterParam(0, 0, 0,
+				null, 300, 2, null, 0);
+		Assert.assertEquals("Success",2,resPageObj.getContent().size());
+	}
+	
+	@Test
+	public void getRestaurantByLocation() {
+		Mockito.when(searchDao.findByLonAndLatDAO(Matchers.anyFloat(),Matchers.anyFloat(), 
+				Matchers.anyFloat(),Matchers.anyDouble(),Matchers.anyDouble(),Matchers.any()))
+		.thenReturn(resModel);
+		Page<RestaurantModel> resPageObj= restInterface.getRestaurantByLocation(0,0,0,0);
+		Assert.assertEquals("Success", 2, resModel.getContent().size());
+		
+	}
+	
+
+	@Test
+	public void getRestaurantById() {
+		Mockito.when(searchDao.findByIdDAO(Matchers.anyString())).thenReturn(resObj);
+		RestaurantModel resObj=restInterface.getResaurantById("3100153");
+		Assert.assertEquals("Success","3100153",resObj.getRestaurantId());
+		
+	}
+	
+	@Test
+	public void getRestaurantByIdFailure() {
+		Mockito.when(searchDao.findByIdDAO(Matchers.anyString())).thenReturn(resObj);
+		RestaurantModel resObj=restInterface.getResaurantById(null);
+		Assert.assertNull(resObj);
+		
+	}
+	
+	@Test
+	public void getFoodDetailsById() {
+		
+	}
+	
+	
+	
 }
