@@ -20,7 +20,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
+import com.mindtree.restaurantsearchservice.repository.FoodDetailsSearchRepository;
 import com.mindtree.restaurantsearchservice.repository.RestaurantSearchRepository;
 
 @RunWith(SpringRunner.class)
@@ -31,14 +33,20 @@ public class SearchDaoImplTests {
 	@MockBean
 	RestaurantSearchRepository restaurantSearchRepo;
 
+	@MockBean
+	FoodDetailsSearchRepository foodSearchRepo;
+	
 	RestaurantModel restaurant1 = new RestaurantModel();
 	RestaurantModel restaurant2 = new RestaurantModel();
-
+	FoodDetails foodDetails = new FoodDetails();
+	
 	List<RestaurantModel> restList = new ArrayList<>();
+	List<FoodDetails> foodList = new ArrayList<>();
 
 	Pageable page;
 
 	Page<RestaurantModel> expectedResult;
+	Page<FoodDetails> expectedFoodDetailsResult;
 
 	@Before
 	public void setup() {
@@ -87,6 +95,18 @@ public class SearchDaoImplTests {
 		page = PageRequest.of(0, 10);
 
 		expectedResult = new PageImpl<>(restList);
+		
+		foodDetails.setCuisineId("14");
+		foodDetails.setAvailabilityStatus("1");
+		foodDetails.setDescription("cooked flesh high spice");
+		foodDetails.setFoodId("14");
+		foodDetails.setFoodName("grill");
+		foodDetails.setFoodPrice(242);
+		foodDetails.setRestaurantId("6310470");
+		foodList.add(foodDetails);
+		page = PageRequest.of(0, 10);
+		
+		expectedFoodDetailsResult = new PageImpl<>(foodList);
 	}
 
 	@Test
@@ -154,4 +174,22 @@ public class SearchDaoImplTests {
 		assertEquals(expectedResult, restaurantSearchRepo.findByLonLatRatingBudget("North Indian", 3, 200, 1,
 				77.6993861, 12.94993396, page));
 	}
+	
+	// Unit test cases to find food details by restaurantId
+	@Test
+	public void getFoodDetailsByRestaurantIdDAOSuccess() throws Exception {
+		Mockito.when(foodSearchRepo.getFoodDetailsByRestaurantId(Matchers.anyString(), Matchers.anyObject()))
+				.thenReturn(expectedFoodDetailsResult);
+		assertEquals(expectedFoodDetailsResult, foodSearchRepo.getFoodDetailsByRestaurantId("6310470", page));
+	}
+
+	// Unit test cases to find food details by restaurantId & foodId
+	@Test
+	public void getFoodDetailsByRestaurantIdAndFoodIdDAOSuccess() throws Exception {
+		FoodDetails expectedFoodDetailsResult = foodDetails;
+		Mockito.when(foodSearchRepo.getFoodDetailsByRestaurantIdAndFoodId(Matchers.anyString(), Matchers.anyString()))
+				.thenReturn(expectedFoodDetailsResult);
+		assertEquals(expectedFoodDetailsResult, foodSearchRepo.getFoodDetailsByRestaurantIdAndFoodId("6310470", "14"));
+	}
+	
 }
