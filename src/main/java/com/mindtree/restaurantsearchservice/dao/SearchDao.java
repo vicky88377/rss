@@ -33,4 +33,6 @@ public interface SearchDao {
 	
 	public FoodDetails getFoodDetailsByRestaurantIdAndFoodIdDAO(String resId, String foodId);
 	
+	public RestaurantModel updateRestaurantDetails(RestaurantModel model);
+	
 }
