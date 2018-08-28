@@ -119,6 +119,8 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 
 	@Override
 	public boolean validateDeliveryAddress(String resId, double latitude, double longitude) {
+		
+		
 		RestaurantModel data = searchDao.findByIdDAO(resId);
 		if (logger.isDebugEnabled()) {
 			logger.debug("param data: latitude: "+latitude+" longitude: "+ longitude);

@@ -90,8 +90,6 @@ public class RestaurantSearchServiceImplTest {
 		foodDetails.setFoodPrice(242);
 		foodDetails.setRestaurantId("6310470");
 		foodList.add(foodDetails);
-		pageFood = PageRequest.of(0, 10);
-		
 		pageFood = new PageImpl<>(foodList);
 	}
 	@Test
@@ -188,9 +186,40 @@ public class RestaurantSearchServiceImplTest {
 	
 	@Test
 	public void getFoodDetailsById() {
-		
+     Mockito.when(searchDao.getFoodDetailsByRestaurantIdAndFoodIdDAO(Matchers.anyString(),
+    		 Matchers.anyString())).thenReturn(foodDetails);	
+     FoodDetails foodObj=restInterface.getFoodDetailsOfARestuarant("6310470", "14");
+     Assert.assertEquals("Success","6310470",foodObj.getRestaurantId());
 	}
 	
+	@Test
+	public void getFoodDetailsByIdFailure() {
+     Mockito.when(searchDao.getFoodDetailsByRestaurantIdAndFoodIdDAO(Matchers.anyString(),
+    		 Matchers.anyString())).thenReturn(null);	
+     FoodDetails foodObj=restInterface.getFoodDetailsOfARestuarant(null, null);
+     Assert.assertNull(foodObj);
+	}
 	
+	@Test
+	public void getAllFoodDetailsById() {
+		Mockito.when(searchDao.getFoodDetailsByRestaurantIdDAO(Matchers.anyString())).thenReturn(foodList);
+		List<FoodDetails> foodList= restInterface.getAllFoodDetailsByRestaurantId("6310470");
+		Assert.assertEquals("Success",1,foodList.size());
+	}
+	
+	@Test
+	public void getAllFoodDetailsByIdFailure() {
+		Mockito.when(searchDao.getFoodDetailsByRestaurantIdDAO(Matchers.anyString())).thenReturn(null);
+		List<FoodDetails> foodList= restInterface.getAllFoodDetailsByRestaurantId(null);
+		Assert.assertNull(foodList);
+	}
+	
+	@Test
+	public void updateRestaurantDetails() {
+		Mockito.when(searchDao.findByIdDAO("3100153")).thenReturn(resObj);
+		Mockito.when(searchDao.updateRestaurantDetails(Matchers.any())).thenReturn(resObj);
+		RestaurantModel resObj = restInterface.updateRatingBasedOnRestaurantId("3100153", 4);
+		Assert.assertEquals("Success", "3100153", resObj.getRestaurantId());
+	}
 	
 }
