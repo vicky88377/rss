@@ -81,7 +81,7 @@ public class RestaurantSearchController {
 		RestaurantModel data = service.getResaurantById(restaurantId);
 		if(data!=null) {
 		Link getAllFood = ControllerLinkBuilder.linkTo(ControllerLinkBuilder
-				.methodOn(RestaurantSearchController.class).getFoodDetailsByRestaurantId(data.getRestaurantId(), 0))
+				.methodOn(RestaurantSearchController.class).getFoodDetailsByRestaurantId(data.getRestaurantId()))
 				.withRel("FoodMenu");
 		data.add(getAllFood);
 		}
@@ -128,15 +128,15 @@ public class RestaurantSearchController {
 	}
 
 	@GetMapping("/{restaurant_id}/menu")
-	public ResponseStatusModel getFoodDetailsByRestaurantId(@PathVariable("restaurant_id") String restaurantId,
-			@RequestParam(name = "page", required = false, defaultValue = "0") Integer pageNo) {
+	public ResponseStatusModel getFoodDetailsByRestaurantId(@PathVariable("restaurant_id") String restaurantId
+			) {
 		ResponseStatusModel resp= null;
 		if (logger.isDebugEnabled()) {
-			logger.debug("getting food details of restaurant id=" + restaurantId + " , page=" + pageNo);
+			logger.debug("getting food details of restaurant id=" + restaurantId);
 		}
-		Page<FoodDetails> data = service.getAllFoodDetailsByRestaurantId(restaurantId, pageNo);
+		List<FoodDetails> data = service.getAllFoodDetailsByRestaurantId(restaurantId);
 		if(data!=null) {
-			createLinksForFood(data.getContent());
+			createLinksForFood(data);
 			resp = createGenericResponse(data);
 		}
 		return resp;
@@ -161,7 +161,7 @@ public class RestaurantSearchController {
 			Link selfLink = ControllerLinkBuilder.linkTo(RestaurantSearchController.class).slash(restaurantId)
 					.withSelfRel();
 			Link getAllFood = ControllerLinkBuilder.linkTo(ControllerLinkBuilder
-					.methodOn(RestaurantSearchController.class).getFoodDetailsByRestaurantId(restaurantId, 0))
+					.methodOn(RestaurantSearchController.class).getFoodDetailsByRestaurantId(restaurantId))
 					.withRel("FoodMenu");
 			r.add(selfLink, getAllFood);
 		}

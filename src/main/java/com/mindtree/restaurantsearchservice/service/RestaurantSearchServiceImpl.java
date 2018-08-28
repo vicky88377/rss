@@ -6,6 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.mindtree.restaurantsearchservice.dao.SearchDao;
@@ -139,12 +142,11 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 	}
 
 	@Override
-	public Page<FoodDetails> getAllFoodDetailsByRestaurantId(String resId, int pageNo) {
+	public List<FoodDetails> getAllFoodDetailsByRestaurantId(String resId) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("param data: resId: "+resId);
 		}
-		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		return searchDao.getFoodDetailsByRestaurantIdDAO(resId, pageable);
+		return searchDao.getFoodDetailsByRestaurantIdDAO(resId);
 	}
 
 	@Override

@@ -103,4 +103,12 @@ public class RestaurantSearchServiceImplTest {
 		
 		
 	}
+	
+	@Test
+	public void getRestaurantByRatingAndBudget() {
+		Mockito.when(searchDao.findByAreaRatingBudgetDAO(Matchers.anyString(), Matchers.anyFloat(),
+				Matchers.anyFloat(), Matchers.any())).thenReturn(resModel);
+		Page<RestaurantModel> resPageObj= restInterface.getRestaurantByAreaAndFilterParam("Banglore", null,200,3, null, 0);
+		Assert.assertEquals("Success",2,resPageObj.getContent().size());
+	}
 }
