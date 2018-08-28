@@ -44,10 +44,8 @@ public class RestaurantSearchController {
 		
 		if (data != null) {
 			createLinksForRestaurant(data.getContent());
-			resp=createGenericResponse(data);
 		}
-		
-		return resp;
+		return createGenericResponse(data);
 	}
 
 	@GetMapping("/search/{latitude}/{longitude}")
