@@ -65,10 +65,9 @@ public class RestaurantSearchController {
 				cuisine, budget, rating, name, page);
 		if (data != null) {
 			createLinksForRestaurant(data.getContent());
-			resp=createGenericResponse(data);
 		}
 		
-		return resp;
+		return createGenericResponse(data);
 	}
 
 	@GetMapping("{restaurant_id}")
