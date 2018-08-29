@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,27 +29,27 @@ public class RestaurantSearchController {
 	@Autowired
 	private RestaurantSearchServiceInterface service;
 
-	@GetMapping("/search/{area}")
+	@GetMapping(value = "/search/{area}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseStatusModel searchRestaurantByArea(@PathVariable String area,
 			@RequestParam(required = false) String name, @RequestParam(defaultValue = "0") Integer page,
 			@RequestParam(required = false, defaultValue = "0") Float rating,
 			@RequestParam(required = false, defaultValue = "0") Float budget,
 			@RequestParam(required = false) String cuisine) {
-		ResponseStatusModel resp=null;
+		ResponseStatusModel resp = null;
 		if (logger.isDebugEnabled()) {
 			logger.debug("searching restaurant with area=" + area + " with name=" + name + ",page=" + page + ",rating="
 					+ rating + ",budget=" + budget + ",cuisine=" + cuisine);
 		}
 		Page<RestaurantModel> data = service.getRestaurantByAreaAndFilterParam(area, cuisine, budget, rating, name,
 				page);
-		
+
 		if (data != null) {
 			createLinksForRestaurant(data.getContent());
 		}
 		return createGenericResponse(data);
 	}
 
-	@GetMapping("/search/{latitude}/{longitude}")
+	@GetMapping(path = "/search/{latitude}/{longitude}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseStatusModel searchRestaurantByCoordinates(@PathVariable Double latitude,
 			@PathVariable Double longitude, @RequestParam(required = false) String name,
 			@RequestParam(defaultValue = "0") Integer page,
@@ -56,7 +57,7 @@ public class RestaurantSearchController {
 			@RequestParam(required = false, defaultValue = "0") Float budget,
 			@RequestParam(required = false) String cuisine,
 			@RequestParam(required = false, defaultValue = "1") Float distance) {
-		ResponseStatusModel resp=null;
+		ResponseStatusModel resp = null;
 		if (logger.isDebugEnabled()) {
 			logger.debug("searching restaurant with latitude,longitude=" + latitude + "," + longitude + " with name="
 					+ name + ",page=" + page + ",rating=" + rating + ",budget=" + budget + ",cuisine=" + cuisine);
@@ -65,39 +66,37 @@ public class RestaurantSearchController {
 				cuisine, budget, rating, name, page);
 		if (data != null) {
 			createLinksForRestaurant(data.getContent());
-			resp=createGenericResponse(data);
 		}
-		
-		return resp;
+
+		return createGenericResponse(data);
 	}
 
-	@GetMapping("{restaurant_id}")
+	@GetMapping(value = "{restaurant_id}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseStatusModel getRestaurantDetailsById(@PathVariable("restaurant_id") String restaurantId) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("getting restaurant details of restaurant id=" + restaurantId);
 		}
 		RestaurantModel data = service.getResaurantById(restaurantId);
-		if(data!=null) {
-		Link getAllFood = ControllerLinkBuilder.linkTo(ControllerLinkBuilder
-				.methodOn(RestaurantSearchController.class).getFoodDetailsByRestaurantId(data.getRestaurantId(), 0))
-				.withRel("FoodMenu");
-		data.add(getAllFood);
+		if (data != null) {
+			Link getAllFood = ControllerLinkBuilder.linkTo(ControllerLinkBuilder
+					.methodOn(RestaurantSearchController.class).getFoodDetailsByRestaurantId(data.getRestaurantId()))
+					.withRel("FoodMenu");
+			data.add(getAllFood);
 		}
 		return createGenericResponse(data);
 	}
 
-	@GetMapping("/{restaurant_id}/food/{food_id}")
-	public ResponseStatusModel getFoodDetailsByFoodId(@PathVariable("restaurant_id") String restaurantId,
-			@PathVariable("food_id") String foodId) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("getting food details of restaurant id=" + restaurantId + " , food id=" + foodId);
-		}
-		FoodDetails data = service.getFoodDetailsOfARestuarant(restaurantId, foodId);
-		if (logger.isDebugEnabled()) {
-			logger.debug("Food Details" + data);
-		}
-		return createGenericResponse(data);
-	}
+	/*
+	 * @GetMapping("/{restaurant_id}/food/{food_id}") public ResponseStatusModel
+	 * getFoodDetailsByFoodId(@PathVariable("restaurant_id") String restaurantId,
+	 * 
+	 * @PathVariable("food_id") String foodId) { if (logger.isDebugEnabled()) {
+	 * logger.debug("getting food details of restaurant id=" + restaurantId +
+	 * " , food id=" + foodId); } FoodDetails data =
+	 * service.getFoodDetailsOfARestuarant(restaurantId, foodId); if
+	 * (logger.isDebugEnabled()) { logger.debug("Food Details" + data); } return
+	 * createGenericResponse(data); }
+	 */
 
 	@GetMapping("/{restaurant_id}/validate/{latitude}/{longitude}")
 	public ResponseStatusModel validateDeliveryAddress(@PathVariable("restaurant_id") String restaurantId,
@@ -126,32 +125,27 @@ public class RestaurantSearchController {
 	}
 
 	@GetMapping("/{restaurant_id}/menu")
-	public ResponseStatusModel getFoodDetailsByRestaurantId(@PathVariable("restaurant_id") String restaurantId,
-			@RequestParam(name = "page", required = false, defaultValue = "0") Integer pageNo) {
-		ResponseStatusModel resp= null;
+	public ResponseStatusModel getFoodDetailsByRestaurantId(@PathVariable("restaurant_id") String restaurantId) {
+		ResponseStatusModel resp = null;
 		if (logger.isDebugEnabled()) {
-			logger.debug("getting food details of restaurant id=" + restaurantId + " , page=" + pageNo);
+			logger.debug("getting food details of restaurant id=" + restaurantId);
 		}
-		Page<FoodDetails> data = service.getAllFoodDetailsByRestaurantId(restaurantId, pageNo);
-		if(data!=null) {
-			createLinksForFood(data.getContent());
-			resp = createGenericResponse(data);
-		}
-		return resp;
+		List<FoodDetails> data = service.getAllFoodDetailsByRestaurantId(restaurantId);
+
+		return createResponseForFoods(data);
 	}
-	
-	@PutMapping("/reviews/{restaurant_id}/{rating}")
+
+	@PutMapping("/{restaurant_id}/reviews/{rating}")
 	public ResponseStatusModel updateRatingDetailOfRestaurant(@PathVariable("restaurant_id") String restaurantId,
 			@PathVariable("rating") float rating) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("getting food details of restaurant id=" + restaurantId + " , rating=" + rating);
 		}
-		
-		RestaurantModel resObj=service.updateRatingBasedOnRestaurantId(restaurantId, rating);
-		return createGenericResponse(resObj);
-		
-	}
 
+		RestaurantModel resObj = service.updateRatingBasedOnRestaurantId(restaurantId, rating);
+		return createGenericResponse(resObj);
+
+	}
 
 	private List<RestaurantModel> createLinksForRestaurant(List<RestaurantModel> data) {
 		for (RestaurantModel r : data) {
@@ -159,28 +153,45 @@ public class RestaurantSearchController {
 			Link selfLink = ControllerLinkBuilder.linkTo(RestaurantSearchController.class).slash(restaurantId)
 					.withSelfRel();
 			Link getAllFood = ControllerLinkBuilder.linkTo(ControllerLinkBuilder
-					.methodOn(RestaurantSearchController.class).getFoodDetailsByRestaurantId(restaurantId, 0))
+					.methodOn(RestaurantSearchController.class).getFoodDetailsByRestaurantId(restaurantId))
 					.withRel("FoodMenu");
 			r.add(selfLink, getAllFood);
 		}
 		return data;
 	}
-	
-	private List<FoodDetails> createLinksForFood(List<FoodDetails> data) {
-		for (FoodDetails f : data) {
-			String restaurantId =f.getRestaurantId();
-			String foodId=f.getFoodId();
-			Link selfLink = ControllerLinkBuilder.linkTo(ControllerLinkBuilder
-					.methodOn(RestaurantSearchController.class).getFoodDetailsByFoodId(restaurantId, foodId))
-					.withSelfRel();
-			f.add(selfLink);
-		}
-		return data;
-	}
-	
+
+	/*
+	 * private List<FoodDetails> createLinksForFood(List<FoodDetails> data) { for
+	 * (FoodDetails f : data) { String restaurantId =f.getRestaurantId(); String
+	 * foodId=f.getFoodId(); Link selfLink =
+	 * ControllerLinkBuilder.linkTo(ControllerLinkBuilder
+	 * .methodOn(RestaurantSearchController.class).getFoodDetailsByFoodId(
+	 * restaurantId, foodId)) .withSelfRel(); f.add(selfLink); } return data; }
+	 */
+
 	private ResponseStatusModel createGenericResponse(Object data) {
 		ResponseStatusModel responseStatus = new ResponseStatusModel();
-		if (data!=null) {
+		if (data != null) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Creating Success Response");
+			}
+			responseStatus.setData(data);
+			responseStatus.setStatusCode(200);
+			responseStatus.setStatus("SUCCESS");
+		} else {
+			if (logger.isDebugEnabled()) {
+				logger.debug("No Data Available");
+			}
+			responseStatus.setStatusCode(401);
+			responseStatus.setStatus("SUCCESS");
+			responseStatus.setMessage("No Data Found");
+		}
+		return responseStatus;
+	}
+
+	private ResponseStatusModel createResponseForFoods(List<FoodDetails> data) {
+		ResponseStatusModel responseStatus = new ResponseStatusModel();
+		if (!data.isEmpty()) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating Success Response");
 			}

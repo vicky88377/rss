@@ -7,8 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+//import org.springframework.stereotype.Component;
+import java.util.List;
 import org.springframework.stereotype.Service;
-
 import com.mindtree.restaurantsearchservice.dao.SearchDao;
 import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
@@ -118,13 +119,15 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 
 	@Override
 	public boolean validateDeliveryAddress(String resId, double latitude, double longitude) {
+		
+		
 		RestaurantModel data = searchDao.findByIdDAO(resId);
 		if (logger.isDebugEnabled()) {
 			logger.debug("param data: latitude: "+latitude+" longitude: "+ longitude);
 		}
 		double lat = data.getLatitude();
 		double lon = data.getLongitude();
-		double distance = Math.sqrt(Math.pow((latitude - lat), 2) + Math.pow((longitude - lon), 2));
+		double distance=calculateDistance(lat, latitude, lon, longitude, 0.0, 0.0);
 		if (distance <= 5) {
 			return true;
 		}
@@ -136,16 +139,25 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		if (logger.isDebugEnabled()) {
 			logger.debug("param data: resId: "+resId+" foodId: "+ foodId);
 		}
+		if(resId!=null && foodId!=null && !resId.isEmpty() && !foodId.isEmpty()) {
 		return searchDao.getFoodDetailsByRestaurantIdAndFoodIdDAO(resId, foodId);
+		}
+		else {
+			return null;
+		}
 	}
 
 	@Override
-	public Page<FoodDetails> getAllFoodDetailsByRestaurantId(String resId, int pageNo) {
+	public List<FoodDetails> getAllFoodDetailsByRestaurantId(String resId) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("param data: resId: "+resId);
 		}
-		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		return searchDao.getFoodDetailsByRestaurantIdDAO(resId, pageable);
+		if(resId!=null && !resId.isEmpty()) {
+		return searchDao.getFoodDetailsByRestaurantIdDAO(resId);
+		}
+		else {
+			return null;
+		}
 	}
 
 	@Override
@@ -155,5 +167,33 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		RestaurantModel resObj1=searchDao.updateRestaurantDetails(resObj);
 		return resObj1;
 	}
+	/**
+	 * {@link:https://stackoverflow.com/questions/3694380/calculating-distance-between-two-points-using-latitude-longitude-what-am-i-doi}
+	 * Calculate distance between two points in latitude and longitude taking
+	 * into account height difference. If you are not interested in height
+	 * difference pass 0.0. Uses Haversine method as its base.
+	 * 
+	 * lat1, lon1 Start point lat2, lon2 End point el1 Start altitude in meters
+	 * el2 End altitude in meters
+	 * @returns Distance in Meters
+	 */
+	public static double calculateDistance(double lat1, double lat2, double lon1,
+	        double lon2, double el1, double el2) {
 
+	    final int R = 6371; // Radius of the earth
+
+	    double latDistance = Math.toRadians(lat2 - lat1);
+	    double lonDistance = Math.toRadians(lon2 - lon1);
+	    double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+	            + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+	            * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+	    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	    double distance = R * c * 1000; // convert to meters
+
+	    double height = el1 - el2;
+
+	    distance = Math.pow(distance, 2) + Math.pow(height, 2);
+
+	    return Math.sqrt(distance);
+	}
 }
