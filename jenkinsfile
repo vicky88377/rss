@@ -9,7 +9,7 @@ pipeline
                                                                           {           
                                                                                       withMaven(maven:'Maven_3_3_9')
                                                                                       {
-                                                                                                     sh 'mvn -f restaurant-search-service/pom.xml clean compile'
+                                                                                                     sh 'mvn -f pom.xml clean compile'
                                                                                       }
                                                                            }          
                                                                         }             
@@ -19,7 +19,7 @@ pipeline
                                                                           {
                                                                                       withMaven(maven:'Maven_3_3_9')
                                                                                       {
-                                                                                                     sh 'mvn -f restaurant-search-service/pom.xml test'
+                                                                                                     sh 'mvn -f pom.xml test'
                                                                                       }
                                                                            }          
                                                                         } 
@@ -29,7 +29,7 @@ pipeline
                                            {
                                                           withSonarQubeEnv('mysonar') 
                                                           {
-                                                                        sh 'mvn -f restaurant-search-service/pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar'
+                                                                        sh 'mvn -f pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar'
                                                            }
                                                           }
                                            }
@@ -40,7 +40,7 @@ pipeline
                                                                            {
                                                                                       withMaven(maven:'Maven_3_3_9')
                                                                                       {
-                                                                                                     sh 'mvn -f restaurant-search-service/pom.xml package'
+                                                                                                     sh 'mvn -f pom.xml package'
                                                                                       }
                                                                            } 
                                                                         }  
