@@ -222,4 +222,19 @@ public class RestaurantSearchServiceImplTest {
 		Assert.assertEquals("Success", "3100153", resObj.getRestaurantId());
 	}
 	
+	@Test
+	public void validateCustomerAddress() {
+		Mockito.when(searchDao.findByIdDAO("3100153")).thenReturn(resObj);
+		boolean isValid=restInterface.validateDeliveryAddress("3100153", 0, 0);
+		Assert.assertTrue(isValid);
+		
+	}
+	
+	@Test
+	public void validateCustomerAddressFailure() {
+		Mockito.when(searchDao.findByIdDAO("3100153")).thenReturn(resObj);
+		boolean isValid=restInterface.validateDeliveryAddress("3100153", 40.7486,-73.9864);
+		Assert.assertFalse(isValid);
+		
+	}
 }
