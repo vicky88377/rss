@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,7 +29,7 @@ public class RestaurantSearchController {
 	@Autowired
 	private RestaurantSearchServiceInterface service;
 
-	@GetMapping("/search/{area}")
+	@GetMapping(value="/search/{area}",produces= {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseStatusModel searchRestaurantByArea(@PathVariable String area,
 			@RequestParam(required = false) String name, @RequestParam(defaultValue = "0") Integer page,
 			@RequestParam(required = false, defaultValue = "0") Float rating,
@@ -48,7 +49,7 @@ public class RestaurantSearchController {
 		return createGenericResponse(data);
 	}
 
-	@GetMapping("/search/{latitude}/{longitude}")
+	@GetMapping(path="/search/{latitude}/{longitude}",produces= {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseStatusModel searchRestaurantByCoordinates(@PathVariable Double latitude,
 			@PathVariable Double longitude, @RequestParam(required = false) String name,
 			@RequestParam(defaultValue = "0") Integer page,
@@ -65,13 +66,12 @@ public class RestaurantSearchController {
 				cuisine, budget, rating, name, page);
 		if (data != null) {
 			createLinksForRestaurant(data.getContent());
-			resp=createGenericResponse(data);
 		}
 		
-		return resp;
+		return createGenericResponse(data);
 	}
 
-	@GetMapping("{restaurant_id}")
+	@GetMapping(value="{restaurant_id}",produces= {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseStatusModel getRestaurantDetailsById(@PathVariable("restaurant_id") String restaurantId) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("getting restaurant details of restaurant id=" + restaurantId);
@@ -86,7 +86,7 @@ public class RestaurantSearchController {
 		return createGenericResponse(data);
 	}
 
-	@GetMapping("/{restaurant_id}/food/{food_id}")
+	/*@GetMapping("/{restaurant_id}/food/{food_id}")
 	public ResponseStatusModel getFoodDetailsByFoodId(@PathVariable("restaurant_id") String restaurantId,
 			@PathVariable("food_id") String foodId) {
 		if (logger.isDebugEnabled()) {
@@ -97,7 +97,7 @@ public class RestaurantSearchController {
 			logger.debug("Food Details" + data);
 		}
 		return createGenericResponse(data);
-	}
+	}*/
 
 	@GetMapping("/{restaurant_id}/validate/{latitude}/{longitude}")
 	public ResponseStatusModel validateDeliveryAddress(@PathVariable("restaurant_id") String restaurantId,
@@ -163,7 +163,7 @@ public class RestaurantSearchController {
 		return data;
 	}
 	
-	private List<FoodDetails> createLinksForFood(List<FoodDetails> data) {
+	/*private List<FoodDetails> createLinksForFood(List<FoodDetails> data) {
 		for (FoodDetails f : data) {
 			String restaurantId =f.getRestaurantId();
 			String foodId=f.getFoodId();
@@ -173,7 +173,7 @@ public class RestaurantSearchController {
 			f.add(selfLink);
 		}
 		return data;
-	}
+	}*/
 	
 	private ResponseStatusModel createGenericResponse(Object data) {
 		ResponseStatusModel responseStatus = new ResponseStatusModel();
