@@ -249,11 +249,12 @@ public class SearchDaoImplTests {
 	}
 	
 	// Success test cases to find food details by restaurantId
+	// %%%%%%%%%%%%%%%%%%%%%%%%%%%
 	@Test
 	public void getFoodDetailsByRestaurantIdDAOSuccess() throws Exception {
 		Mockito.when(foodSearchRepo.getFoodDetailsByRestaurantId(Mockito.anyString()))
 				.thenReturn(foodList);
-		assertEquals(expectedFoodDetailsResult, foodSearchRepo.getFoodDetailsByRestaurantId("6310470"));
+		assertEquals(foodList, foodSearchRepo.getFoodDetailsByRestaurantId("6310470"));
 	}
 	
 	// Failure test cases to find food details by restaurantId
