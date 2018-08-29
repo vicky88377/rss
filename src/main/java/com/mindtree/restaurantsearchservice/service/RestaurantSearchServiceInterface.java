@@ -1,5 +1,7 @@
 package com.mindtree.restaurantsearchservice.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 
 import com.mindtree.restaurantsearchservice.model.FoodDetails;
@@ -21,7 +23,7 @@ public interface RestaurantSearchServiceInterface {
          //public RestaurantModel getRestaurantReviews(long resId,long pageNo);
          public FoodDetails getFoodDetailsOfARestuarant(String  resId,String foodId);
          public boolean validateDeliveryAddress(String resId, double latitude, double longitude);
-         public Page<FoodDetails> getAllFoodDetailsByRestaurantId(String resId,int pageNo);
+         public List<FoodDetails> getAllFoodDetailsByRestaurantId(String resId);
          public RestaurantModel updateRatingBasedOnRestaurantId(String resId,float rating);
          
          

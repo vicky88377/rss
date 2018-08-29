@@ -1,5 +1,7 @@
 package com.mindtree.restaurantsearchservice.dao;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.annotations.Query;
@@ -29,7 +31,7 @@ public interface SearchDao {
 			float distance, double latitude, double longitude, Pageable page);
 	
 	// food search APIs
-	public Page<FoodDetails> getFoodDetailsByRestaurantIdDAO(String resId, Pageable page);
+	public List<FoodDetails> getFoodDetailsByRestaurantIdDAO(String resId);
 	
 	public FoodDetails getFoodDetailsByRestaurantIdAndFoodIdDAO(String resId, String foodId);
 	
