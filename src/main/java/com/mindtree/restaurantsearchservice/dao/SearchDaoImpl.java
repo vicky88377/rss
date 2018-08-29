@@ -1,5 +1,6 @@
 package com.mindtree.restaurantsearchservice.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,9 +72,9 @@ public class SearchDaoImpl implements SearchDao {
 	}
 
 	@Override
-	public Page<FoodDetails> getFoodDetailsByRestaurantIdDAO(String resId,Pageable page) {
+	public List<FoodDetails> getFoodDetailsByRestaurantIdDAO(String resId) {
 		
-		return foodDetailsSearchRepository.getFoodDetailsByRestaurantId(resId,page);
+		return foodDetailsSearchRepository.getFoodDetailsByRestaurantId(resId);
 	}
 
 	@Override
@@ -81,7 +82,11 @@ public class SearchDaoImpl implements SearchDao {
 		
 		return foodDetailsSearchRepository.getFoodDetailsByRestaurantIdAndFoodId(resId, foodId);
 	}
-	
+	 /**
+	  * added by srinivasan
+	  * to update rating of a particular restaurant
+	  * 
+	  */
 	@Override
 	public RestaurantModel updateRestaurantDetails(RestaurantModel model) {
 		return restaurantSearchRepository.save(model);

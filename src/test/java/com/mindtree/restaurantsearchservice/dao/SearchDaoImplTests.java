@@ -9,7 +9,6 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -113,8 +112,8 @@ public class SearchDaoImplTests {
 	@Test
 	public void findByAreaRatingBudgetDAOSuccess() throws Exception {
 
-		Mockito.when(restaurantSearchRepo.findByAreaRatingBudget(Matchers.anyString(), Matchers.anyFloat(),
-				Matchers.anyFloat(), Matchers.anyObject())).thenReturn(expectedResult);
+		Mockito.when(restaurantSearchRepo.findByAreaRatingBudget(Mockito.anyString(), Mockito.anyFloat(),
+				Mockito.anyFloat(), Mockito.anyObject())).thenReturn(expectedResult);
 
 		assertEquals(expectedResult, restaurantSearchRepo.findByAreaRatingBudget("bangalore", 1, 100, page));
 	}
@@ -124,8 +123,8 @@ public class SearchDaoImplTests {
 	@Test
 	public void findByAreaRatingBudgetDAOFailure() throws Exception {
 
-		Mockito.when(restaurantSearchRepo.findByAreaRatingBudget(Matchers.anyString(), Matchers.anyFloat(),
-				Matchers.anyFloat(), Matchers.anyObject())).thenReturn(null);
+		Mockito.when(restaurantSearchRepo.findByAreaRatingBudget(Mockito.anyString(), Mockito.anyFloat(),
+				Mockito.anyFloat(), Mockito.anyObject())).thenReturn(null);
 
 		assertEquals(null, restaurantSearchRepo.findByAreaRatingBudget("bangalore", 1, 100, page));
 	}
@@ -135,8 +134,8 @@ public class SearchDaoImplTests {
 	@Test
 	public void findByAreaAndCuisineDAOSuccess() throws Exception {
 
-		Mockito.when(restaurantSearchRepo.findByAreaAndCuisine(Matchers.anyString(), Matchers.anyString(),
-				Matchers.anyFloat(), Matchers.anyFloat(), Matchers.anyObject())).thenReturn(expectedResult);
+		Mockito.when(restaurantSearchRepo.findByAreaAndCuisine(Mockito.anyString(), Mockito.anyString(),
+				Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyObject())).thenReturn(expectedResult);
 
 		assertEquals(expectedResult,
 				restaurantSearchRepo.findByAreaAndCuisine("bangalore", "north indian", 1, 100, page));
@@ -147,8 +146,8 @@ public class SearchDaoImplTests {
 	@Test
 	public void findByAreaAndCuisineDAOFailure() throws Exception {
 
-		Mockito.when(restaurantSearchRepo.findByAreaAndCuisine(Matchers.anyString(), Matchers.anyString(),
-				Matchers.anyFloat(), Matchers.anyFloat(), Matchers.anyObject())).thenReturn(null);
+		Mockito.when(restaurantSearchRepo.findByAreaAndCuisine(Mockito.anyString(), Mockito.anyString(),
+				Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyObject())).thenReturn(null);
 
 		assertEquals(null, restaurantSearchRepo.findByAreaAndCuisine("bangalore", "north indian", 1, 100, page));
 	}
@@ -157,8 +156,8 @@ public class SearchDaoImplTests {
 	@Test
 	public void findByAreaAndNameDAOSuccess() throws Exception {
 
-		Mockito.when(restaurantSearchRepo.findByAreaAndName(Matchers.anyString(), Matchers.anyString(),
-				Matchers.anyObject())).thenReturn(expectedResult);
+		Mockito.when(restaurantSearchRepo.findByAreaAndName(Mockito.anyString(), Mockito.anyString(),
+				Mockito.anyObject())).thenReturn(expectedResult);
 
 		assertEquals(expectedResult,
 				restaurantSearchRepo.findByAreaAndName("bangalore", "AB's - Absolute Barbecues", page));
@@ -168,8 +167,8 @@ public class SearchDaoImplTests {
 	@Test
 	public void findByAreaAndNameDAOFailure() throws Exception {
 
-		Mockito.when(restaurantSearchRepo.findByAreaAndName(Matchers.anyString(), Matchers.anyString(),
-				Matchers.anyObject())).thenReturn(null);
+		Mockito.when(restaurantSearchRepo.findByAreaAndName(Mockito.anyString(), Mockito.anyString(),
+				Mockito.anyObject())).thenReturn(null);
 
 		assertEquals(null, restaurantSearchRepo.findByAreaAndName("bangalore", "AB's - Absolute Barbecues", page));
 	}
@@ -180,7 +179,7 @@ public class SearchDaoImplTests {
 
 		Optional<RestaurantModel> expectedResult = Optional.of(restaurant1);
 
-		Mockito.when(restaurantSearchRepo.findById(Matchers.anyString())).thenReturn(expectedResult);
+		Mockito.when(restaurantSearchRepo.findById(Mockito.anyString())).thenReturn(expectedResult);
 
 		assertEquals(expectedResult, restaurantSearchRepo.findById("1"));
 	}
@@ -189,7 +188,7 @@ public class SearchDaoImplTests {
 	@Test
 	public void findByIdDAOFailure() throws Exception {
 
-		Mockito.when(restaurantSearchRepo.findById(Matchers.anyString())).thenReturn(null);
+		Mockito.when(restaurantSearchRepo.findById(Mockito.anyString())).thenReturn(null);
 
 		assertEquals(null, restaurantSearchRepo.findById("1"));
 	}
@@ -197,16 +196,16 @@ public class SearchDaoImplTests {
 	//Success test cases to find restaurant details by longitude,latitude,rating, minimum order price & distance
 	@Test
 	public void findByLonAndLatDAOSuccess() throws Exception {
-		Mockito.when(restaurantSearchRepo.findByLonAndLat(Matchers.anyFloat(), Matchers.anyFloat(), Matchers.anyFloat(),
-				Matchers.anyDouble(), Matchers.anyDouble(), Matchers.anyObject())).thenReturn(expectedResult);
+		Mockito.when(restaurantSearchRepo.findByLonAndLat(Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(),
+				Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyObject())).thenReturn(expectedResult);
 		assertEquals(expectedResult, restaurantSearchRepo.findByLonAndLat(3, 200, 1, 77.6993861, 12.94993396, page));
 	}
 	
 	//Failure test cases to find restaurant details by longitude,latitude,rating, minimum order price & distance
 	@Test
 	public void findByLonAndLatDAOFailure() throws Exception {
-		Mockito.when(restaurantSearchRepo.findByLonAndLat(Matchers.anyFloat(), Matchers.anyFloat(), Matchers.anyFloat(),
-				Matchers.anyDouble(), Matchers.anyDouble(), Matchers.anyObject())).thenReturn(null);
+		Mockito.when(restaurantSearchRepo.findByLonAndLat(Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(),
+				Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyObject())).thenReturn(null);
 		assertEquals(null, restaurantSearchRepo.findByLonAndLat(3, 200, 1, 77.6993861, 12.94993396, page));
 	}
 	
@@ -214,8 +213,8 @@ public class SearchDaoImplTests {
 	//Success test cases to find restaurant details by Restaurant name,distance,longitude & latitude
 	@Test
 	public void findByLonLatAndNameDAOSuccess() throws Exception {
-		Mockito.when(restaurantSearchRepo.findByLonLatAndName(Matchers.anyString(), Matchers.anyFloat(),
-				Matchers.anyDouble(), Matchers.anyDouble(), Matchers.anyObject())).thenReturn(expectedResult);
+		Mockito.when(restaurantSearchRepo.findByLonLatAndName(Mockito.anyString(), Mockito.anyFloat(),
+				Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyObject())).thenReturn(expectedResult);
 		assertEquals(expectedResult, restaurantSearchRepo.findByLonLatAndName("AB's - Absolute Barbecues", 1,
 				77.6993861, 12.94993396, page));
 	}
@@ -223,8 +222,8 @@ public class SearchDaoImplTests {
 	//Failure test cases to find restaurant details by Restaurant name,distance,longitude & latitude
 	@Test
 	public void findByLonLatAndNameDAOFailure() throws Exception {
-		Mockito.when(restaurantSearchRepo.findByLonLatAndName(Matchers.anyString(), Matchers.anyFloat(),
-				Matchers.anyDouble(), Matchers.anyDouble(), Matchers.anyObject())).thenReturn(null);
+		Mockito.when(restaurantSearchRepo.findByLonLatAndName(Mockito.anyString(), Mockito.anyFloat(),
+				Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyObject())).thenReturn(null);
 		assertEquals(null, restaurantSearchRepo.findByLonLatAndName("AB's - Absolute Barbecues", 1,
 				77.6993861, 12.94993396, page));
 	}
@@ -232,9 +231,9 @@ public class SearchDaoImplTests {
 	//Success test cases to find restaurant details by cusine type, rating, minimum order price, longitude,latitude & distance
 	@Test
 	public void findByLonLatRatingBudgetDAOSuccess() throws Exception {
-		Mockito.when(restaurantSearchRepo.findByLonLatRatingBudget(Matchers.anyString(), Matchers.anyFloat(),
-				Matchers.anyFloat(), Matchers.anyFloat(), Matchers.anyDouble(), Matchers.anyDouble(),
-				Matchers.anyObject())).thenReturn(expectedResult);
+		Mockito.when(restaurantSearchRepo.findByLonLatRatingBudget(Mockito.anyString(), Mockito.anyFloat(),
+				Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyDouble(), Mockito.anyDouble(),
+				Mockito.anyObject())).thenReturn(expectedResult);
 		assertEquals(expectedResult, restaurantSearchRepo.findByLonLatRatingBudget("North Indian", 3, 200, 1,
 				77.6993861, 12.94993396, page));
 	}
@@ -242,9 +241,9 @@ public class SearchDaoImplTests {
 	//Failure test cases to find restaurant details by cusine type, rating, minimum order price, longitude,latitude & distance
 	@Test
 	public void findByLonLatRatingBudgetDAOFailure() throws Exception {
-		Mockito.when(restaurantSearchRepo.findByLonLatRatingBudget(Matchers.anyString(), Matchers.anyFloat(),
-				Matchers.anyFloat(), Matchers.anyFloat(), Matchers.anyDouble(), Matchers.anyDouble(),
-				Matchers.anyObject())).thenReturn(null);
+		Mockito.when(restaurantSearchRepo.findByLonLatRatingBudget(Mockito.anyString(), Mockito.anyFloat(),
+				Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyDouble(), Mockito.anyDouble(),
+				Mockito.anyObject())).thenReturn(null);
 		assertEquals(null, restaurantSearchRepo.findByLonLatRatingBudget("North Indian", 3, 200, 1,
 				77.6993861, 12.94993396, page));
 	}
@@ -252,23 +251,23 @@ public class SearchDaoImplTests {
 	// Success test cases to find food details by restaurantId
 	@Test
 	public void getFoodDetailsByRestaurantIdDAOSuccess() throws Exception {
-		Mockito.when(foodSearchRepo.getFoodDetailsByRestaurantId(Matchers.anyString(), Matchers.anyObject()))
-				.thenReturn(expectedFoodDetailsResult);
-		assertEquals(expectedFoodDetailsResult, foodSearchRepo.getFoodDetailsByRestaurantId("6310470", page));
+		Mockito.when(foodSearchRepo.getFoodDetailsByRestaurantId(Mockito.anyString()))
+				.thenReturn(foodList);
+		assertEquals(expectedFoodDetailsResult, foodSearchRepo.getFoodDetailsByRestaurantId("6310470"));
 	}
 	
 	// Failure test cases to find food details by restaurantId
 	@Test
 	public void getFoodDetailsByRestaurantIdDAOFailure() throws Exception {
-		Mockito.when(foodSearchRepo.getFoodDetailsByRestaurantId(Matchers.anyString(), Matchers.anyObject()))
+		Mockito.when(foodSearchRepo.getFoodDetailsByRestaurantId(Mockito.anyString()))
 				.thenReturn(null);
-		assertEquals(null, foodSearchRepo.getFoodDetailsByRestaurantId("6310470", page));
+		assertEquals(null, foodSearchRepo.getFoodDetailsByRestaurantId("6310470"));
 	}
 
 	// Success test cases to find food details by restaurantId & foodId
 	@Test
 	public void getFoodDetailsByRestaurantIdAndFoodIdDAOSuccess() throws Exception {
-		Mockito.when(foodSearchRepo.getFoodDetailsByRestaurantIdAndFoodId(Matchers.anyString(), Matchers.anyString()))
+		Mockito.when(foodSearchRepo.getFoodDetailsByRestaurantIdAndFoodId(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(foodDetails);
 		assertEquals(foodDetails, foodSearchRepo.getFoodDetailsByRestaurantIdAndFoodId("6310470", "14"));
 	}
@@ -276,7 +275,7 @@ public class SearchDaoImplTests {
 	// Failure test cases to find food details by restaurantId & foodId
 	@Test
 	public void getFoodDetailsByRestaurantIdAndFoodIdDAOFailure() throws Exception {
-		Mockito.when(foodSearchRepo.getFoodDetailsByRestaurantIdAndFoodId(Matchers.anyString(), Matchers.anyString()))
+		Mockito.when(foodSearchRepo.getFoodDetailsByRestaurantIdAndFoodId(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(null);
 		assertEquals(null, foodSearchRepo.getFoodDetailsByRestaurantIdAndFoodId("6310470", "14"));
 	}
