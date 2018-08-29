@@ -6,6 +6,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,8 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -30,6 +30,9 @@ public class RestaurantSearchControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
+	@InjectMocks
+	@Autowired
+	private RestaurantSearchController controller;
 	@MockBean
 	private RestaurantSearchServiceImpl service;
 
@@ -81,19 +84,17 @@ public class RestaurantSearchControllerTest {
 
 		list.add(r1);
 		list.add(r2);
-		Pageable pageable = PageRequest.of(0, 2);
-		restaurants = new PageImpl<>(list, pageable, 4);
+		restaurants = new PageImpl<>(list);
 	}
 
 	@Test
 	public void testGetRestaurantsByArea() throws Exception {
-		Mockito.when(service.getRestaurantByAreaAndFilterParam(Mockito.anyString(), Mockito.anyString(),
-				Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyString(), Mockito.anyInt())).thenReturn(restaurants);
+		//Mockito.when(service.getRestaurantByAreaAndFilterParam(Mockito.anyString(), Mockito.anyString(),Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyString(), Mockito.anyInt())).thenReturn(restaurants);
 
-		// Mockito.doReturn(restaurants).when(service).getRestaurantByAreaAndFilterParam(Matchers.anyString(),
-		// Matchers.anyString(), Matchers.anyFloat(), Matchers.anyFloat(),
-		// Matchers.anyString(), Matchers.anyInt());
-		mockMvc.perform(MockMvcRequestBuilders.get("/restaurants/search/bangalore"))
+		 Mockito.doReturn(restaurants).when(service).getRestaurantByAreaAndFilterParam(Mockito.anyString(),
+				 Mockito.anyString(), Mockito.anyFloat(), Mockito.anyFloat(),
+				 Mockito.anyString(), Mockito.anyInt());
+		mockMvc.perform(MockMvcRequestBuilders.get("/restaurants/search/bangalore").accept(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().json(EXPECTED_RES_JSON));
 	}
@@ -145,7 +146,7 @@ public class RestaurantSearchControllerTest {
 		Mockito.when(service.getResaurantById(Mockito.anyString())).thenReturn(r1);
 		mockMvc.perform(MockMvcRequestBuilders.get("/restaurants/18407918"))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().json(
-						"{\"status_code\": 200,\"status\": \"SUCCESS\",\"data\": {\"address\":\"2989/B, 12th Main Road, HAL 2nd Stage, Indiranagar, Bangalore\",\"city\":\"Bangalore\",\"locality\":\"Indiranagar\",\"rating\":3.0,\"latitude\":0.0,\"longitude\":0.0,\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost:9001/restaurants/18407918\"},{\"rel\":\"FoodMenu\",\"href\":\"http://localhost:9001/restaurants/18407918/menu?page=0\"}],\"restaurant_id\":\"18407918\",\"restaurant_name\":\"Bombay Brasserie\",\"start_time\":\"11:00 AM\",\"end_time\":\"11:00 PM\",\"minimum_order_price\":200.0,\"average_delivery_time\":\"1\",\"delivery_point\":\"560057\",\"display_image\":\"https://www.golfreizen.nu/wp-content/gallery/spanje-costa-calida-mar-menor-golf-resort/InterContinental-Mar-Menor-Golf-Resort-Spa-00.jpg\",\"cuisen_type\":\"Modern Indian\",\"locality_verbose\":\"Indiranagar, Bangalore\",\"offer_info\":\"20%\"}}"));
+						"{\"status_code\":200,\"status\":\"SUCCESS\",\"data\":{\"address\":\"2989/B, 12th Main Road, HAL 2nd Stage, Indiranagar, Bangalore\",\"city\":\"Bangalore\",\"locality\":\"Indiranagar\",\"rating\":3.0,\"latitude\":0.0,\"longitude\":0.0,\"links\":[{\"rel\":\"FoodMenu\",\"href\":\"http://localhost/restaurants/18407918/menu\"}],\"restaurant_id\":\"18407918\",\"restaurant_name\":\"Bombay Brasserie\",\"start_time\":\"11:00 AM\",\"end_time\":\"11:00 PM\",\"minimum_order_price\":200.0,\"average_delivery_time\":\"1\",\"delivery_point\":\"560057\",\"display_image\":\"https://www.golfreizen.nu/wp-content/gallery/spanje-costa-calida-mar-menor-golf-resort/InterContinental-Mar-Menor-Golf-Resort-Spa-00.jpg\",\"cuisen_type\":\"Modern Indian\",\"locality_verbose\":\"Indiranagar, Bangalore\",\"offer_info\":\"20%\"}}"));
 	}
 
 	@Test
