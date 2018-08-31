@@ -23,7 +23,7 @@ pipeline
                                                                                       }
                                                                            }          
                                                                         } 
-                                                                         stage('SonarQube analysis') 
+                                                                        /* stage('SonarQube analysis') 
                                                                          {
                                            steps 
                                            {
@@ -32,7 +32,7 @@ pipeline
                                                                         sh 'mvn -f pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar'
                                                            }
                                                           }
-                                           }
+                                           }*/
                                                           
                                                                         stage('Build-stage')
                                                                         {
