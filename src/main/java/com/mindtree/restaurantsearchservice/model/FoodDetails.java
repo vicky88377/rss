@@ -39,6 +39,8 @@ public class FoodDetails extends ResourceSupport{
 	@JsonProperty("cuisines_id")
 	@JsonIgnoreProperties
 	private String cuisineId;
+	
+	//foodDetails OBj
 
 	/**
 	 * @return the foodId
