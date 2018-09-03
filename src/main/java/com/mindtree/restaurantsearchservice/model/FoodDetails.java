@@ -28,6 +28,7 @@ public class FoodDetails extends ResourceSupport{
 	private String description;
 	
 	@JsonProperty("availability_status")
+	@JsonIgnoreProperties
 	private String availabilityStatus;
 	
 
