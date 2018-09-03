@@ -18,11 +18,13 @@ public class FoodDetails extends ResourceSupport{
 	private String foodId;
 	
 	@JsonProperty("food_name")
+	@JsonIgnoreProperties
 	private String foodName;
 	
 	@JsonProperty("food_price")
 	private float foodPrice;
 	
+	@JsonIgnoreProperties
 	private String description;
 	
 	@JsonProperty("availability_status")
@@ -30,9 +32,11 @@ public class FoodDetails extends ResourceSupport{
 	
 
 	@JsonProperty("restaurant_id")
+	@JsonIgnoreProperties
 	private String restaurantId;
 	
 	@JsonProperty("cuisines_id")
+	@JsonIgnoreProperties
 	private String cuisineId;
 
 	/**
