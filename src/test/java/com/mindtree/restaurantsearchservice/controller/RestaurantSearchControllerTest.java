@@ -199,7 +199,7 @@ public class RestaurantSearchControllerTest {
 		Mockito.when(service.getResaurantById(Mockito.anyString())).thenReturn(null);
 		mockMvc.perform(MockMvcRequestBuilders.get("/restaurants/18407918"))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content()
-						.json("{\"status_code\":401,\"status\":\"SUCCESS\",\"message\":\"No Data Found\"}"));
+						.json("{\"status_code\":401,\"status\":\"FAILURE\",\"message\":\"No Data Found\"}"));
 	}
 
 	@Test
@@ -272,7 +272,7 @@ public class RestaurantSearchControllerTest {
 
 	@Test
 	public void testUpdateReviewRatingInvalidId() throws Exception {
-		String expected = "{\"status_code\":401,\"status\":\"SUCCESS\",\"message\":\"No Data Found\"}";
+		String expected = "{\"status_code\":401,\"status\":\"FAILURE\",\"message\":\"No Data Found\"}";
 		Mockito.when(service.updateRatingBasedOnRestaurantId(Mockito.anyString(), Mockito.anyFloat())).thenReturn(null);
 		mockMvc.perform(MockMvcRequestBuilders.put("/restaurants/18407918/reviews/4"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
