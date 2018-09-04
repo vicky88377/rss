@@ -16,10 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mindtree.restaurantsearchservice.model.DeliveryInfoResponse;
 import com.mindtree.restaurantsearchservice.model.FoodDetails;
-import com.mindtree.restaurantsearchservice.model.ResponseStatusModel;
+import com.mindtree.restaurantsearchservice.model.FoodMenuResponse;
+import com.mindtree.restaurantsearchservice.model.RestaurantDetailResponse;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
+import com.mindtree.restaurantsearchservice.model.RestaurantsResponse;
 import com.mindtree.restaurantsearchservice.service.RestaurantSearchServiceInterface;
+import com.mindtree.restaurantsearchservice.vo.AreaSearchParams;
+import com.mindtree.restaurantsearchservice.vo.CoOrdinateSearchParams;
 
 @RestController
 @RequestMapping("/restaurants")
@@ -30,49 +35,65 @@ public class RestaurantSearchController {
 	private RestaurantSearchServiceInterface service;
 
 	@GetMapping(value = "/search/{area}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseStatusModel searchRestaurantByArea(@PathVariable String area,
+	public RestaurantsResponse searchRestaurantByArea(@PathVariable String area,
 			@RequestParam(required = false) String name, @RequestParam(defaultValue = "0") Integer page,
 			@RequestParam(required = false, defaultValue = "0") Float rating,
 			@RequestParam(required = false, defaultValue = "0") Float budget,
 			@RequestParam(required = false) String cuisine) {
-		ResponseStatusModel resp = null;
 		if (logger.isDebugEnabled()) {
 			logger.debug("searching restaurant with area=" + area + " with name=" + name + ",page=" + page + ",rating="
 					+ rating + ",budget=" + budget + ",cuisine=" + cuisine);
 		}
-		Page<RestaurantModel> data = service.getRestaurantByAreaAndFilterParam(area, cuisine, budget, rating, name,
-				page);
+
+		AreaSearchParams params = new AreaSearchParams();
+		params.setArea(area);
+		params.setBudget(budget);
+		params.setCuisine(cuisine);
+		params.setPage(page);
+		params.setRestaurantName(name);
+		params.setRating(rating);
+
+		Page<RestaurantModel> data = service.getRestaurantByAreaAndFilterParam(params);
 
 		if (data != null) {
 			createLinksForRestaurant(data.getContent());
 		}
-		return createGenericResponse(data);
+		return createRestaurantResponse(data);
 	}
 
 	@GetMapping(path = "/search/{latitude}/{longitude}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseStatusModel searchRestaurantByCoordinates(@PathVariable Double latitude,
+	public RestaurantsResponse searchRestaurantByCoordinates(@PathVariable Double latitude,
 			@PathVariable Double longitude, @RequestParam(required = false) String name,
 			@RequestParam(defaultValue = "0") Integer page,
 			@RequestParam(required = false, defaultValue = "0") Float rating,
 			@RequestParam(required = false, defaultValue = "0") Float budget,
 			@RequestParam(required = false) String cuisine,
 			@RequestParam(required = false, defaultValue = "1") Float distance) {
-		ResponseStatusModel resp = null;
 		if (logger.isDebugEnabled()) {
 			logger.debug("searching restaurant with latitude,longitude=" + latitude + "," + longitude + " with name="
 					+ name + ",page=" + page + ",rating=" + rating + ",budget=" + budget + ",cuisine=" + cuisine);
 		}
-		Page<RestaurantModel> data = service.getRestaurantByLocationAndFilterParam(latitude, longitude, distance,
-				cuisine, budget, rating, name, page);
+
+		CoOrdinateSearchParams params = new CoOrdinateSearchParams();
+		params.setLatitude(latitude);
+		params.setLongitude(longitude);
+		params.setBudget(budget);
+		params.setCuisine(cuisine);
+		params.setPage(page);
+		params.setRestaurantName(name);
+		params.setRating(rating);
+		params.setDistance(distance);
+		
+		Page<RestaurantModel> data = service.getRestaurantByLocationAndFilterParam(params);
 		if (data != null) {
 			createLinksForRestaurant(data.getContent());
 		}
 
-		return createGenericResponse(data);
+		return createRestaurantResponse(data);
 	}
 
 	@GetMapping(value = "{restaurant_id}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseStatusModel getRestaurantDetailsById(@PathVariable("restaurant_id") String restaurantId) {
+	public RestaurantDetailResponse getRestaurantDetailsById(@PathVariable("restaurant_id") String restaurantId) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("getting restaurant details of restaurant id=" + restaurantId);
 		}
@@ -83,7 +104,7 @@ public class RestaurantSearchController {
 					.withRel("FoodMenu");
 			data.add(getAllFood);
 		}
-		return createGenericResponse(data);
+		return createRestaurantDetailResponse(data);
 	}
 
 	/*
@@ -99,12 +120,12 @@ public class RestaurantSearchController {
 	 */
 
 	@GetMapping("/{restaurant_id}/validate/{latitude}/{longitude}")
-	public ResponseStatusModel validateDeliveryAddress(@PathVariable("restaurant_id") String restaurantId,
+	public DeliveryInfoResponse validateDeliveryAddress(@PathVariable("restaurant_id") String restaurantId,
 			@PathVariable Double latitude, @PathVariable Double longitude) {
 		if (logger.isDebugEnabled()) {
 		}
 		boolean data = service.validateDeliveryAddress(restaurantId, latitude, longitude);
-		ResponseStatusModel status = new ResponseStatusModel();
+		DeliveryInfoResponse status = new DeliveryInfoResponse();
 		if (data == false) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("No Data Available");
@@ -112,6 +133,7 @@ public class RestaurantSearchController {
 			status.setMessage("Delivery is not available for your area");
 			status.setStatusCode(401);
 			status.setStatus("SUCCESS");
+			status.setResult(data);
 		} else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating Success Response");
@@ -119,14 +141,13 @@ public class RestaurantSearchController {
 			status.setMessage("Delivery is available for your area");
 			status.setStatusCode(200);
 			status.setStatus("SUCCESS");
-			status.setData(data);
+			status.setResult(data);
 		}
 		return status;
 	}
 
 	@GetMapping("/{restaurant_id}/menu")
-	public ResponseStatusModel getFoodDetailsByRestaurantId(@PathVariable("restaurant_id") String restaurantId) {
-		ResponseStatusModel resp = null;
+	public FoodMenuResponse getFoodDetailsByRestaurantId(@PathVariable("restaurant_id") String restaurantId) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("getting food details of restaurant id=" + restaurantId);
 		}
@@ -136,14 +157,14 @@ public class RestaurantSearchController {
 	}
 
 	@PutMapping("/{restaurant_id}/reviews/{rating}")
-	public ResponseStatusModel updateRatingDetailOfRestaurant(@PathVariable("restaurant_id") String restaurantId,
+	public RestaurantDetailResponse updateRatingDetailOfRestaurant(@PathVariable("restaurant_id") String restaurantId,
 			@PathVariable("rating") float rating) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("getting food details of restaurant id=" + restaurantId + " , rating=" + rating);
 		}
 
 		RestaurantModel resObj = service.updateRatingBasedOnRestaurantId(restaurantId, rating);
-		return createGenericResponse(resObj);
+		return createRestaurantDetailResponse(resObj);
 
 	}
 
@@ -169,15 +190,20 @@ public class RestaurantSearchController {
 	 * restaurantId, foodId)) .withSelfRel(); f.add(selfLink); } return data; }
 	 */
 
-	private ResponseStatusModel createGenericResponse(Object data) {
-		ResponseStatusModel responseStatus = new ResponseStatusModel();
-		if (data != null) {
+	private RestaurantsResponse createRestaurantResponse(Page<RestaurantModel> data) {
+		RestaurantsResponse responseStatus = new RestaurantsResponse();
+		if (data != null && !data.getContent().isEmpty()) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating Success Response");
 			}
-			responseStatus.setData(data);
 			responseStatus.setStatusCode(200);
 			responseStatus.setStatus("SUCCESS");
+			responseStatus.setData(data.getContent());
+			responseStatus.setPageNo(data.getNumber());
+			responseStatus.setPageSize(data.getSize());
+			responseStatus.setTotalpages(data.getTotalPages());
+			responseStatus.setTotalElements(data.getNumberOfElements());
+
 		} else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("No Data Available");
@@ -189,8 +215,29 @@ public class RestaurantSearchController {
 		return responseStatus;
 	}
 
-	private ResponseStatusModel createResponseForFoods(List<FoodDetails> data) {
-		ResponseStatusModel responseStatus = new ResponseStatusModel();
+	private RestaurantDetailResponse createRestaurantDetailResponse(RestaurantModel data) {
+		RestaurantDetailResponse responseStatus = new RestaurantDetailResponse();
+		if (data != null) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Creating Success Response");
+			}
+			responseStatus.setStatusCode(200);
+			responseStatus.setStatus("SUCCESS");
+			responseStatus.setData(data);
+
+		} else {
+			if (logger.isDebugEnabled()) {
+				logger.debug("No Data Available");
+			}
+			responseStatus.setStatusCode(401);
+			responseStatus.setStatus("FAILURE");
+			responseStatus.setMessage("No Data Found");
+		}
+		return responseStatus;
+	}
+
+	private FoodMenuResponse createResponseForFoods(List<FoodDetails> data) {
+		FoodMenuResponse responseStatus = new FoodMenuResponse();
 		if (!data.isEmpty()) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating Success Response");

@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 
 import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
+import com.mindtree.restaurantsearchservice.vo.AreaSearchParams;
+import com.mindtree.restaurantsearchservice.vo.CoOrdinateSearchParams;
 /**
  * 
  * @author M1046464
@@ -13,12 +15,10 @@ import com.mindtree.restaurantsearchservice.model.RestaurantModel;
  */
 public interface RestaurantSearchServiceInterface {
          
-         public Page<RestaurantModel> getRestaurantByAreaAndFilterParam(String location,String cuisine,float budget,
-        		 float rating,String name,int pageNo);
+         public Page<RestaurantModel> getRestaurantByAreaAndFilterParam(AreaSearchParams areaParams);
          //public Page<RestaurantModel> getRestaurantByArea(String location,int pageNo);
-         public Page<RestaurantModel> getRestaurantByLocationAndFilterParam(double latitude,double longitude,float distance,
-        		 String cuisine,float budget,float rating,String name,int pageNo);
-         public Page<RestaurantModel> getRestaurantByLocation(double latitude,double longitude,float distance,int pageNo);
+         public Page<RestaurantModel> getRestaurantByLocationAndFilterParam(CoOrdinateSearchParams coOrdinateParams);
+         public Page<RestaurantModel> getRestaurantByLocation(CoOrdinateSearchParams coOrdinateParamsr);
          public RestaurantModel getResaurantById(String  resId);
          //public RestaurantModel getRestaurantReviews(long resId,long pageNo);
          public FoodDetails getFoodDetailsOfARestuarant(String  resId,String foodId);

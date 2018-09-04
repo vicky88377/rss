@@ -23,6 +23,7 @@ public class FoodDetails extends ResourceSupport{
 	@JsonProperty("food_price")
 	private float foodPrice;
 	
+	@JsonIgnoreProperties
 	private String description;
 	
 	@JsonProperty("availability_status")
@@ -33,6 +34,7 @@ public class FoodDetails extends ResourceSupport{
 	private String restaurantId;
 	
 	@JsonProperty("cuisines_id")
+	
 	private String cuisineId;
 
 	/**
