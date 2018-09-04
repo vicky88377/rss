@@ -142,8 +142,7 @@ public class RestaurantSearchControllerTest {
 		// Mockito.anyString(), Mockito.anyFloat(), Mockito.anyFloat(),
 		// Mockito.anyString(),Mockito.anyInt())).thenReturn(mockdata);
 
-		Mockito.doReturn(mockdata).when(service).getRestaurantByAreaAndFilterParam(Mockito.anyString(),
-				Mockito.anyString(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyString(), Mockito.anyInt());
+		Mockito.doReturn(mockdata).when(service).getRestaurantByAreaAndFilterParam(Mockito.any());
 		mockMvc.perform(MockMvcRequestBuilders.get("/restaurants/search/bangalore").accept(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().json(EXPECTED_RES_JSON));
@@ -151,8 +150,7 @@ public class RestaurantSearchControllerTest {
 
 	@Test
 	public void testGetRestaurantsByAreafailure() throws Exception {
-		Mockito.when(service.getRestaurantByAreaAndFilterParam(Mockito.anyString(), Mockito.anyString(),
-				Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyString(), Mockito.anyInt())).thenReturn(null);
+		Mockito.when(service.getRestaurantByAreaAndFilterParam(Mockito.any())).thenReturn(null);
 		// RestaurantSearchServiceInterface
 		// service=Mockito.mock(RestaurantSearchServiceImpl.class);
 		// Mockito.doReturn(null).when(service).getRestaurantByAreaAndFilterParam(Matchers.anyString(),
@@ -166,11 +164,9 @@ public class RestaurantSearchControllerTest {
 	@Test
 	@Ignore
 	public void testGetRestaurantsByCoordinates() throws Exception {
-		Mockito.when(service.getRestaurantByLocationAndFilterParam(Mockito.anyDouble(), Mockito.anyDouble(),
-				Mockito.anyFloat(), Mockito.anyString(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyString(),
-				Mockito.anyInt())).thenReturn(restaurants);
+		//Mockito.when(service.getRestaurantByLocationAndFilterParam(Mockito.any())).thenReturn(restaurants);
 
-		// Mockito.doReturn(restaurants).when(service).getRestaurantByAreaAndFilterParam(Matchers.anyString(),
+		 Mockito.doReturn(restaurants).when(service).getRestaurantByAreaAndFilterParam(Mockito.any());
 		// Matchers.anyString(), Matchers.anyFloat(), Matchers.anyFloat(),
 		// Matchers.anyString(), Matchers.anyInt());
 		mockMvc.perform(MockMvcRequestBuilders.get("/restaurants/search/0/0"))
@@ -180,9 +176,7 @@ public class RestaurantSearchControllerTest {
 
 	@Test
 	public void testGetRestaurantsByCoordinatesFailure() throws Exception {
-		Mockito.when(service.getRestaurantByLocationAndFilterParam(Mockito.anyDouble(), Mockito.anyDouble(),
-				Mockito.anyFloat(), Mockito.anyString(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyString(),
-				Mockito.anyInt())).thenReturn(null);
+		Mockito.when(service.getRestaurantByLocationAndFilterParam(Mockito.any())).thenReturn(null);
 
 		// Mockito.doReturn(restaurants).when(service).getRestaurantByAreaAndFilterParam(Matchers.anyString(),
 		// Matchers.anyString(), Matchers.anyFloat(), Matchers.anyFloat(),
