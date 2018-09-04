@@ -18,7 +18,6 @@ public class FoodDetails extends ResourceSupport{
 	private String foodId;
 	
 	@JsonProperty("food_name")
-	@JsonIgnoreProperties
 	private String foodName;
 	
 	@JsonProperty("food_price")
@@ -28,16 +27,14 @@ public class FoodDetails extends ResourceSupport{
 	private String description;
 	
 	@JsonProperty("availability_status")
-	@JsonIgnoreProperties
 	private String availabilityStatus;
 	
 
 	@JsonProperty("restaurant_id")
-	@JsonIgnoreProperties
 	private String restaurantId;
 	
 	@JsonProperty("cuisines_id")
-	@JsonIgnoreProperties
+	
 	private String cuisineId;
 
 	/**
