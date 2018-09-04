@@ -83,6 +83,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 			data = searchDao.findByLonLatAndNameDAO(coOrdinateParams.getRestaurantName(), 
 					coOrdinateParams.getDistance(), coOrdinateParams.getLatitude(), 
 					coOrdinateParams.getLongitude(), pageable);
+			 
 		} else if (coOrdinateParams.getCuisine() != null && !coOrdinateParams.getCuisine().isEmpty()) {
 			// pass all the parameter to the repository to fetch restaurant based on cuisine
 			// and location
