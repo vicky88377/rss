@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mindtree.restaurantsearchservice.model.DeliveryInfoResponse;
 import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.FoodMenuResponse;
-import com.mindtree.restaurantsearchservice.model.ResponseStatusModel;
 import com.mindtree.restaurantsearchservice.model.RestaurantDetailResponse;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
 import com.mindtree.restaurantsearchservice.model.RestaurantsResponse;
