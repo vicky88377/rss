@@ -175,10 +175,11 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 	@Override
 	public RestaurantModel updateRatingBasedOnRestaurantId(String resId, float rating) {
 		RestaurantModel resObj=searchDao.findByIdDAO(resId);
-		if(resId!=null) {
-		resObj.setRating(rating);
-		RestaurantModel resObj1=searchDao.updateRestaurantDetails(resObj);
-		return resObj1;
+		if (resObj != null) {
+			resObj.setRating(rating);
+			resObj = searchDao.updateRestaurantDetails(resObj);
+		}
+		return resObj;
 	}
 	/**
 	 * {@link:https://stackoverflow.com/questions/3694380/calculating-distance-between-two-points-using-latitude-longitude-what-am-i-doi}

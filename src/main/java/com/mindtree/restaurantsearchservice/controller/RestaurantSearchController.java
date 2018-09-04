@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mindtree.restaurantsearchservice.model.DeliveryInfoResponse;
 import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.FoodMenuResponse;
-import com.mindtree.restaurantsearchservice.model.ResponseStatusModel;
 import com.mindtree.restaurantsearchservice.model.RestaurantDetailResponse;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
 import com.mindtree.restaurantsearchservice.model.RestaurantsResponse;
@@ -114,6 +113,7 @@ public class RestaurantSearchController {
 			status.setMessage("Delivery is not available for your area");
 			status.setStatusCode(401);
 			status.setStatus("SUCCESS");
+			status.setResult(data);
 		} else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating Success Response");
@@ -172,7 +172,7 @@ public class RestaurantSearchController {
 
 	private RestaurantsResponse createRestaurantResponse(Page<RestaurantModel> data) {
 		RestaurantsResponse responseStatus = new RestaurantsResponse();
-		if (data!=null && !data.getContent().isEmpty()) {
+		if (data != null && !data.getContent().isEmpty()) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating Success Response");
 			}
@@ -183,7 +183,7 @@ public class RestaurantSearchController {
 			responseStatus.setPageSize(data.getSize());
 			responseStatus.setTotalpages(data.getTotalPages());
 			responseStatus.setTotalElements(data.getNumberOfElements());
-			
+
 		} else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("No Data Available");
@@ -194,16 +194,17 @@ public class RestaurantSearchController {
 		}
 		return responseStatus;
 	}
+
 	private RestaurantDetailResponse createRestaurantDetailResponse(RestaurantModel data) {
 		RestaurantDetailResponse responseStatus = new RestaurantDetailResponse();
-		if (data!=null) {
+		if (data != null) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating Success Response");
 			}
 			responseStatus.setStatusCode(200);
 			responseStatus.setStatus("SUCCESS");
 			responseStatus.setData(data);
-			
+
 		} else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("No Data Available");
