@@ -24,6 +24,8 @@ import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
 import com.mindtree.restaurantsearchservice.service.RestaurantSearchServiceImpl;
 import com.mindtree.restaurantsearchservice.service.RestaurantSearchServiceInterface;
+import com.mindtree.restaurantsearchservice.vo.AreaSearchParams;
+import com.mindtree.restaurantsearchservice.vo.CoOrdinateSearchParams;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value=RestaurantSearchServiceImpl.class)
@@ -91,14 +93,15 @@ public class RestaurantSearchServiceImplTest {
 		foodDetails.setRestaurantId("6310470");
 		foodList.add(foodDetails);
 		pageFood = new PageImpl<>(foodList);
+		
 	}
 	@Test
 	public void getRestaurantByAreaAndCuisine () {
 		
 		Mockito.when(searchDao.findByAreaAndCuisineDAO(Matchers.anyString(), Matchers.anyString(),
 				 Matchers.anyFloat(), Matchers.anyFloat(),Matchers.any())).thenReturn(resModel) ;
-		Page<RestaurantModel> resPageObj=restInterface.getRestaurantByAreaAndFilterParam("Banglore",
-				"North",0,0,null,0);
+		AreaSearchParams areaObj=setObj("Banglore","North",0,0,null,0);
+		Page<RestaurantModel> resPageObj=restInterface.getRestaurantByAreaAndFilterParam(areaObj);
 		 String resId= resPageObj.getContent().get(0).getRestaurantId();
 		 Assert.assertEquals("Success", resId, "3100153");
 		
@@ -110,8 +113,8 @@ public class RestaurantSearchServiceImplTest {
 		
 		Mockito.when(searchDao.findByAreaAndNameDAO(Matchers.anyString(), Matchers.anyString(),Matchers.any())).
 		thenReturn(resModel) ;
-		Page<RestaurantModel> resPageObj=restInterface.getRestaurantByAreaAndFilterParam("Banglore",
-				null,0,0,"Dilli da dhaba",0);
+		AreaSearchParams areaObj=setObj("Banglore",null,0,0,"Dilli da dhaba",0);
+		Page<RestaurantModel> resPageObj=restInterface.getRestaurantByAreaAndFilterParam(areaObj);
 		 
 		 Assert.assertEquals("Success",2,resPageObj.getContent().size());
 		
@@ -122,7 +125,8 @@ public class RestaurantSearchServiceImplTest {
 	public void getRestaurantByRatingAndBudget() {
 		Mockito.when(searchDao.findByAreaRatingBudgetDAO(Matchers.anyString(), Matchers.anyFloat(),
 				Matchers.anyFloat(), Matchers.any())).thenReturn(resModel);
-		Page<RestaurantModel> resPageObj= restInterface.getRestaurantByAreaAndFilterParam("Banglore", null,200,3, null, 0);
+		AreaSearchParams areaObj=setObj("Banglore", null,200,3, null, 0);
+		Page<RestaurantModel> resPageObj= restInterface.getRestaurantByAreaAndFilterParam(areaObj);
 		Assert.assertEquals("Success",2,resPageObj.getContent().size());
 	}
 	
@@ -132,8 +136,8 @@ public class RestaurantSearchServiceImplTest {
 		Mockito.when(searchDao.findByLonLatRatingBudgetDAO(Matchers.anyString(),Matchers.anyFloat(),Matchers.anyFloat(),
 				Matchers.anyFloat(), Matchers.anyDouble(),Matchers.anyDouble(), Matchers.any()))
 		.thenReturn(resModel);
-		Page<RestaurantModel> resPageObj=restInterface.getRestaurantByLocationAndFilterParam(0, 0, 0,
-				"North", 0, 0, null, 0);
+		CoOrdinateSearchParams coOrdinateObj=setCoOrdinateObj(0.0, 0.0, 0,"North", 0, 0, null, 0);
+		Page<RestaurantModel> resPageObj=restInterface.getRestaurantByLocationAndFilterParam(coOrdinateObj);
 		Assert.assertEquals("Success","3100153",resPageObj.getContent().get(0).getRestaurantId());
 	}
 	
@@ -142,8 +146,8 @@ public class RestaurantSearchServiceImplTest {
 		Mockito.when(searchDao.findByLonLatAndNameDAO(Matchers.anyString(),Matchers.anyFloat(), Matchers.anyDouble(),
 				Matchers.anyDouble(), Matchers.any()))
 		.thenReturn(resModel);
-		Page<RestaurantModel> resPageObj=restInterface.getRestaurantByLocationAndFilterParam(0, 0, 0,
-				null, 0, 0, "Maharaja Restaurant", 0);
+		CoOrdinateSearchParams coOrdinateObj=setCoOrdinateObj(0.0, 0.0, 0,null, 0, 0, "Maharaja Restaurant", 0);
+		Page<RestaurantModel> resPageObj=restInterface.getRestaurantByLocationAndFilterParam(coOrdinateObj);
 		Assert.assertEquals("Success","Maharaja Restaurant",resPageObj.getContent().get(0).getRestaurantName());
 	}
 	
@@ -152,8 +156,8 @@ public class RestaurantSearchServiceImplTest {
 		Mockito.when(searchDao.findByLonAndLatDAO(Matchers.anyFloat(),Matchers.anyFloat(),
 				Matchers.anyFloat(), Matchers.anyDouble(),Matchers.anyDouble(), Matchers.any()))
 		.thenReturn(resModel);
-		Page<RestaurantModel> resPageObj=restInterface.getRestaurantByLocationAndFilterParam(0, 0, 0,
-				null, 300, 2, null, 0);
+		CoOrdinateSearchParams coOrdinateObj=setCoOrdinateObj(0.0, 0.0, 0,null, 0, 0, null, 0);
+		Page<RestaurantModel> resPageObj=restInterface.getRestaurantByLocationAndFilterParam(coOrdinateObj);
 		Assert.assertEquals("Success",2,resPageObj.getContent().size());
 	}
 	
@@ -162,7 +166,8 @@ public class RestaurantSearchServiceImplTest {
 		Mockito.when(searchDao.findByLonAndLatDAO(Matchers.anyFloat(),Matchers.anyFloat(), 
 				Matchers.anyFloat(),Matchers.anyDouble(),Matchers.anyDouble(),Matchers.any()))
 		.thenReturn(resModel);
-		Page<RestaurantModel> resPageObj= restInterface.getRestaurantByLocation(0,0,0,0);
+		CoOrdinateSearchParams coOrdinateObj=setCoOrdinateObj(0.0, 0.0, 0,null, 0, 0, null, 0);
+		Page<RestaurantModel> resPageObj= restInterface.getRestaurantByLocation(coOrdinateObj);
 		Assert.assertEquals("Success", 2, resModel.getContent().size());
 		
 	}
@@ -235,6 +240,35 @@ public class RestaurantSearchServiceImplTest {
 		Mockito.when(searchDao.findByIdDAO("3100153")).thenReturn(resObj);
 		boolean isValid=restInterface.validateDeliveryAddress("3100153", 40.7486,-73.9864);
 		Assert.assertFalse(isValid);
+		
+	}
+	
+	
+	public AreaSearchParams setObj(String area,String cuisine,float budget,float rating,String name,int page) {
+		AreaSearchParams areaObj= new AreaSearchParams();
+		areaObj.setArea(area);
+		areaObj.setCuisine(cuisine);
+		areaObj.setBudget(budget);
+		areaObj.setRating(rating);
+		areaObj.setRestaurantName(name);
+		areaObj.setPage(page);
+		return areaObj;
+		
+	}
+	
+	public CoOrdinateSearchParams setCoOrdinateObj(Double latitude,Double longitude,float distance,
+			String cuisine,float budget,float rating
+			,String name,int page) {
+		CoOrdinateSearchParams coOrdianteObj= new CoOrdinateSearchParams();
+		coOrdianteObj.setLatitude(latitude);
+		coOrdianteObj.setLongitude(longitude);
+		coOrdianteObj.setDistance(distance);
+		coOrdianteObj.setCuisine(cuisine);
+		coOrdianteObj.setBudget(budget);
+		coOrdianteObj.setRating(rating);
+		coOrdianteObj.setRestaurantName(name);
+		coOrdianteObj.setPage(page);
+		return coOrdianteObj;
 		
 	}
 }
