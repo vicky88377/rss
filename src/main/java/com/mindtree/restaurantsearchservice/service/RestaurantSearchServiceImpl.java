@@ -99,7 +99,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		}
 		return data;
 	}
-
+                    
 	@Override
 	public Page<RestaurantModel> getRestaurantByLocation(CoOrdinateSearchParams coOrdinateParams) {
 		Pageable pageable = PageRequest.of(coOrdinateParams.getPage(), pageSize);

@@ -1,0 +1,6 @@
+projectKey=microservices301
+serverUrl=http://localhost:4590
+serverVersion=6.4.0.25310
+dashboardUrl=http://localhost:4590/dashboard/index/microservices301
+ceTaskId=AWWj67fdifC_1Xb073rm
+ceTaskUrl=http://localhost:4590/api/ce/task?id=AWWj67fdifC_1Xb073rm
