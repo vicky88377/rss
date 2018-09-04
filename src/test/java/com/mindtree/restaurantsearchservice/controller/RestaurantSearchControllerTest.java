@@ -158,7 +158,7 @@ public class RestaurantSearchControllerTest {
 		// Matchers.anyString(), Matchers.anyInt());
 		mockMvc.perform(MockMvcRequestBuilders.get("/restaurants/search/bangalore"))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content()
-						.json("{\"status_code\":401,\"status\":\"SUCCESS\",\"message\":\"No Data Found\"}"));
+						.json("{\"status_code\":401,\"status\":\"FAILURE\",\"message\":\"No Data Found\"}"));
 	}
 
 	@Test
@@ -199,7 +199,7 @@ public class RestaurantSearchControllerTest {
 		Mockito.when(service.getResaurantById(Mockito.anyString())).thenReturn(null);
 		mockMvc.perform(MockMvcRequestBuilders.get("/restaurants/18407918"))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content()
-						.json("{\"status_code\":401,\"status\":\"SUCCESS\",\"message\":\"No Data Found\"}"));
+						.json("{\"status_code\":401,\"status\":\"FAILURE\",\"message\":\"No Data Found\"}"));
 	}
 
 	@Test
