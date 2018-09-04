@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import com.mindtree.restaurantsearchservice.dao.SearchDao;
 import com.mindtree.restaurantsearchservice.model.FoodDetails;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
+import com.mindtree.restaurantsearchservice.vo.AreaSearchParams;
+import com.mindtree.restaurantsearchservice.vo.CoOrdinateSearchParams;
 
 @Service
 public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInterface {
@@ -25,22 +27,26 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 	private Integer pageSize;
 
 	@Override
-	public Page<RestaurantModel> getRestaurantByAreaAndFilterParam(String location, String cuisine, float budget,
-			float rating, String name, int pageNo) {
-		Pageable pageable = PageRequest.of(pageNo, pageSize);
+	public Page<RestaurantModel> getRestaurantByAreaAndFilterParam(AreaSearchParams areaParams) {
+		
+		Pageable pageable = PageRequest.of(areaParams.getPage(), pageSize);
 		Page<RestaurantModel> data = null;
 		if (logger.isDebugEnabled()) {
-			logger.debug("param data: area: " + location + " cuisine: " + cuisine + " budget: " + budget + " rating: "
-					+ rating + " restauratnName: " + name + " pageNo: " + pageNo);
+			logger.debug("param data: area: " + areaParams.getArea() + " cuisine: " + areaParams.getCuisine() 
+			+ " budget: " + areaParams.getBudget() + " rating: "
+					+ areaParams.getRating() + " restauratnName: " + areaParams.getRestaurantName() + 
+					" pageNo: " + areaParams.getPage());
 		}
-		if (name != null && !name.isEmpty()) {
-			data = searchDao.findByAreaAndNameDAO(location, name, pageable);
-		} else if (cuisine != null && !cuisine.isEmpty()) {
+		if (areaParams.getRestaurantName() != null && !areaParams.getRestaurantName().isEmpty()) {
+			data = searchDao.findByAreaAndNameDAO(areaParams.getArea(), areaParams.getRestaurantName(), pageable);
+		} else if (areaParams.getCuisine() != null && !areaParams.getCuisine().isEmpty()) {
 
-			data = searchDao.findByAreaAndCuisineDAO(location, cuisine, rating, budget, pageable);
+			data = searchDao.findByAreaAndCuisineDAO(areaParams.getArea(), 
+					areaParams.getCuisine(), areaParams.getRating(), areaParams.getBudget(), pageable);
 		} else {
 			// fetch all restaurant based on default condition
-			data = searchDao.findByAreaRatingBudgetDAO(location, rating, budget, pageable);
+			data = searchDao.findByAreaRatingBudgetDAO(areaParams.getArea(), 
+					areaParams.getRating(), areaParams.getBudget(), pageable);
 		}
 		if (data != null && logger.isDebugEnabled()) {
 			logger.debug("response data: " + data.getContent());
@@ -63,24 +69,30 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 	}*/
 
 	@Override
-	public Page<RestaurantModel> getRestaurantByLocationAndFilterParam(double latitude, double longitude,
-			float distance, String cuisine, float budget, float rating, String name, int pageNo) {
-		Pageable pageable = PageRequest.of(pageNo, pageSize);
+	public Page<RestaurantModel> getRestaurantByLocationAndFilterParam(CoOrdinateSearchParams coOrdinateParams) {
+		Pageable pageable = PageRequest.of(coOrdinateParams.getPage(), pageSize);
 		if (logger.isDebugEnabled()) {
-			logger.debug("param data: latitude: "+latitude+" longitude: "+longitude + " cuisine: " + cuisine + 
-					" budget: " + budget + " rating: "
-					+ rating + " restauratnName: " + name + " pageNo: " + pageNo);
+			logger.debug("param data: latitude: "+coOrdinateParams.getLatitude()+" longitude: "+
+					coOrdinateParams.getLongitude() + " cuisine: " + coOrdinateParams.getCuisine() + 
+					" budget: " + coOrdinateParams.getBudget() + " rating: "
+					+ coOrdinateParams.getRating() + " restauratnName: " + coOrdinateParams.getRestaurantName() +
+					" pageNo: " + coOrdinateParams.getPage());
 		}
 		Page<RestaurantModel> data = null;
-		if (name != null && !name.isEmpty()) {
-			data = searchDao.findByLonLatAndNameDAO(name, distance, latitude, longitude, pageable);
-		} else if (cuisine != null && !cuisine.isEmpty()) {
+		if (coOrdinateParams.getRestaurantName() != null && !coOrdinateParams.getRestaurantName().isEmpty()) {
+			data = searchDao.findByLonLatAndNameDAO(coOrdinateParams.getRestaurantName(), 
+					coOrdinateParams.getDistance(), coOrdinateParams.getLatitude(), 
+					coOrdinateParams.getLongitude(), pageable);
+		} else if (coOrdinateParams.getCuisine() != null && !coOrdinateParams.getCuisine().isEmpty()) {
 			// pass all the parameter to the repository to fetch restaurant based on cuisine
 			// and location
-			data = searchDao.findByLonLatRatingBudgetDAO(cuisine, rating, budget, distance, latitude, longitude,
+			data = searchDao.findByLonLatRatingBudgetDAO(coOrdinateParams.getCuisine(), 
+					coOrdinateParams.getRating(), coOrdinateParams.getBudget(), 
+					coOrdinateParams.getDistance(),coOrdinateParams.getLatitude(), coOrdinateParams.getLongitude(),
 					pageable);
 		} else {
-			data = searchDao.findByLonAndLatDAO(rating, budget, distance, latitude, longitude, pageable);
+			data = searchDao.findByLonAndLatDAO(coOrdinateParams.getRating(), coOrdinateParams.getBudget(), 
+					coOrdinateParams.getDistance(),coOrdinateParams.getLatitude(), coOrdinateParams.getLongitude(), pageable);
 		}
 		if (data != null && logger.isDebugEnabled()) {
 			logger.debug("response data: data: " + data.getContent());
@@ -89,16 +101,16 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 	}
 
 	@Override
-	public Page<RestaurantModel> getRestaurantByLocation(double latitude, double longitude, float distance,
-			int pageNo) {
-		Pageable pageable = PageRequest.of(pageNo, pageSize);
+	public Page<RestaurantModel> getRestaurantByLocation(CoOrdinateSearchParams coOrdinateParams) {
+		Pageable pageable = PageRequest.of(coOrdinateParams.getPage(), pageSize);
 		float rating = 0, budget = 0;
 		if (logger.isDebugEnabled()) {
-			logger.debug("param data: latitude: "+latitude+" longitude: "+longitude + 
-					" distance: "+ distance +" pageNo: " + pageNo);
+			logger.debug("param data: latitude: "+coOrdinateParams.getLatitude()+" longitude: "+
+					coOrdinateParams.getLongitude() + 
+					" distance: "+ coOrdinateParams.getDistance() +" pageNo: " + coOrdinateParams.getPage());
 		}
-		Page<RestaurantModel> data = searchDao.findByLonAndLatDAO(rating, budget, distance, latitude, longitude,
-				pageable);
+		Page<RestaurantModel> data = searchDao.findByLonAndLatDAO(rating, budget,coOrdinateParams.getDistance(),
+				coOrdinateParams.getLatitude(), coOrdinateParams.getLongitude(), pageable);
 		if (data != null && logger.isDebugEnabled()) {
 			logger.debug("response data: data: " + data.getContent());
 		}
@@ -163,6 +175,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 	@Override
 	public RestaurantModel updateRatingBasedOnRestaurantId(String resId, float rating) {
 		RestaurantModel resObj=searchDao.findByIdDAO(resId);
+		if(resId!=null) {
 		resObj.setRating(rating);
 		RestaurantModel resObj1=searchDao.updateRestaurantDetails(resObj);
 		return resObj1;
