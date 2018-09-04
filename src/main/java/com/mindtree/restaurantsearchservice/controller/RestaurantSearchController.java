@@ -119,7 +119,7 @@ public class RestaurantSearchController {
 	 * createGenericResponse(data); }
 	 */
 
-	@GetMapping("/{restaurant_id}/validate/{latitude}/{longitude}")
+	@GetMapping(value="/{restaurant_id}/validate/{latitude}/{longitude}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public DeliveryInfoResponse validateDeliveryAddress(@PathVariable("restaurant_id") String restaurantId,
 			@PathVariable Double latitude, @PathVariable Double longitude) {
 		if (logger.isDebugEnabled()) {
@@ -146,7 +146,7 @@ public class RestaurantSearchController {
 		return status;
 	}
 
-	@GetMapping("/{restaurant_id}/menu")
+	@GetMapping(value="/{restaurant_id}/menu", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public FoodMenuResponse getFoodDetailsByRestaurantId(@PathVariable("restaurant_id") String restaurantId) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("getting food details of restaurant id=" + restaurantId);
@@ -156,7 +156,7 @@ public class RestaurantSearchController {
 		return createResponseForFoods(data);
 	}
 
-	@PutMapping("/{restaurant_id}/reviews/{rating}")
+	@PutMapping(value="/{restaurant_id}/reviews/{rating}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public RestaurantDetailResponse updateRatingDetailOfRestaurant(@PathVariable("restaurant_id") String restaurantId,
 			@PathVariable("rating") float rating) {
 		if (logger.isDebugEnabled()) {
