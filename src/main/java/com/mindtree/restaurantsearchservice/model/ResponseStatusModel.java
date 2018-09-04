@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_EMPTY)
-@JsonPropertyOrder({"status_code","status","message","data"})
+@JsonPropertyOrder({"status_code","status","message"})
 public class ResponseStatusModel {
 
 	@JsonProperty("status_code")
@@ -16,7 +16,6 @@ public class ResponseStatusModel {
 	private String status;
 	@JsonProperty(required = false)
 	private String message;
-	private Object data;
 
 	/**
 	 * @return the statusCode
@@ -62,21 +61,5 @@ public class ResponseStatusModel {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-
-	/**
-	 * @return the data
-	 */
-	public Object getData() {
-		return data;
-	}
-
-	/**
-	 * @param data
-	 *            the data to set
-	 */
-	public void setData(Object data) {
-		this.data = data;
-	}
-
 
 }
