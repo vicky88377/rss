@@ -23,6 +23,8 @@ import com.mindtree.restaurantsearchservice.model.RestaurantDetailResponse;
 import com.mindtree.restaurantsearchservice.model.RestaurantModel;
 import com.mindtree.restaurantsearchservice.model.RestaurantsResponse;
 import com.mindtree.restaurantsearchservice.service.RestaurantSearchServiceInterface;
+import com.mindtree.restaurantsearchservice.vo.AreaSearchParams;
+import com.mindtree.restaurantsearchservice.vo.CoOrdinateSearchParams;
 
 @RestController
 @RequestMapping("/restaurants")
@@ -42,8 +44,16 @@ public class RestaurantSearchController {
 			logger.debug("searching restaurant with area=" + area + " with name=" + name + ",page=" + page + ",rating="
 					+ rating + ",budget=" + budget + ",cuisine=" + cuisine);
 		}
-		Page<RestaurantModel> data = service.getRestaurantByAreaAndFilterParam(area, cuisine, budget, rating, name,
-				page);
+
+		AreaSearchParams params = new AreaSearchParams();
+		params.setArea(area);
+		params.setBudget(budget);
+		params.setCuisine(cuisine);
+		params.setPage(page);
+		params.setRestaurantName(name);
+		params.setRating(rating);
+
+		Page<RestaurantModel> data = service.getRestaurantByAreaAndFilterParam(params);
 
 		if (data != null) {
 			createLinksForRestaurant(data.getContent());
@@ -63,8 +73,18 @@ public class RestaurantSearchController {
 			logger.debug("searching restaurant with latitude,longitude=" + latitude + "," + longitude + " with name="
 					+ name + ",page=" + page + ",rating=" + rating + ",budget=" + budget + ",cuisine=" + cuisine);
 		}
-		Page<RestaurantModel> data = service.getRestaurantByLocationAndFilterParam(latitude, longitude, distance,
-				cuisine, budget, rating, name, page);
+
+		CoOrdinateSearchParams params = new CoOrdinateSearchParams();
+		params.setLatitude(latitude);
+		params.setLongitude(longitude);
+		params.setBudget(budget);
+		params.setCuisine(cuisine);
+		params.setPage(page);
+		params.setRestaurantName(name);
+		params.setRating(rating);
+		params.setDistance(distance);
+		
+		Page<RestaurantModel> data = service.getRestaurantByLocationAndFilterParam(params);
 		if (data != null) {
 			createLinksForRestaurant(data.getContent());
 		}
@@ -210,7 +230,7 @@ public class RestaurantSearchController {
 				logger.debug("No Data Available");
 			}
 			responseStatus.setStatusCode(401);
-			responseStatus.setStatus("SUCCESS");
+			responseStatus.setStatus("FAILURE");
 			responseStatus.setMessage("No Data Found");
 		}
 		return responseStatus;
