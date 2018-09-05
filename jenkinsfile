@@ -47,28 +47,22 @@ pipeline
                                                                         stage('copy-stage')
                                                                         {
                                                                           steps
-                                                                             {
-                                                                                withMaven(maven:'Maven_3_3_9')
-                                                                                {
-                                                                                  sh 'scp /var/lib/jenkins/workspace/Restaurant-Search-Service/target/restaurant-search-service.jar demovm@52.172.129.182:/home/demovm/'
-                                                                                }
+                                                                             {                                                                                
+                                                                                  sh 'scp /var/lib/jenkins/workspace/Restaurant-Search-Service/target/restaurant-search-service.jar demovm@52.172.129.182:/home/demovm/'                                                                                
                                                                               }
 
                                                                         }
                                                                         stage('run-stage')
                                                                         {
                                                                             steps
-                                                                            {
-                                                                                withMaven(maven:'Maven_3_3_9')
-                                                                                {
+                                                                            {                                                                                
                                                                                   sh 'ssh -t -t demovm@52.172.129.182'
                                                                                   sh 'cd /home/demovm'
                                                                                   sh 'kill 5665'
                                                                                   sh 'java -jar restaurant-search-service.jar'
                                                                                   sh 'exit'
-                                                                                }
+                                                                                
                                                                               }
-
                                                                         }
                              
                                            } 
