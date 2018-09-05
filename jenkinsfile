@@ -43,7 +43,25 @@ pipeline
                                                                                                      sh 'mvn -f pom.xml package'
                                                                                       }
                                                                            } 
-                                                                        }  
+                                                                        } 
+                                                                        stage('copy-stage')
+                                                                        {
+                                                                                withMaven(maven:'Maven_3_3_9')
+                                                                                {
+                                                                                  sh 'scp /var/lib/jenkins/workspace/Restaurant-Search-Service/target/restaurant-search-service.jar demovm@52.172.129.182:/home/demovm/'
+                                                                                }
+
+                                                                        }
+                                                                        stage('run-stage')
+                                                                        {
+                                                                                withMaven(maven:'Maven_3_3_9')
+                                                                                {
+                                                                                  sh 'ssh demovm@52.172.129.182:/home/demovm/'
+                                                                                  sh 'kill 5665'
+                                                                                  sh 'java -jar restaurant-search-service.jar'
+                                                                                }
+
+                                                                        }
                              
                                            } 
               }                        
