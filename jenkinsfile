@@ -61,7 +61,8 @@ pipeline
                                                                             {
                                                                                 withMaven(maven:'Maven_3_3_9')
                                                                                 {
-                                                                                  sh 'ssh -t -t demovm@52.172.129.182:/home/demovm/'
+                                                                                  sh 'ssh -t -t demovm@52.172.129.182'
+                                                                                  sh 'cd /home/demovm'
                                                                                   sh 'kill 5665'
                                                                                   sh 'java -jar restaurant-search-service.jar'
                                                                                 }
