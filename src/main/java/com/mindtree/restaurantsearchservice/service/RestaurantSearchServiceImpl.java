@@ -140,11 +140,13 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		if (logger.isDebugEnabled()) {
 			logger.debug("param data: latitude: "+latitude+" longitude: "+ longitude);
 		}
+		if(data!=null) {
 		double lat = data.getLatitude();
 		double lon = data.getLongitude();
 		double distance=calculateDistance(lat, latitude, lon, longitude, 0.0, 0.0);
 		if (distance <= 5) {
 			return true;
+		}
 		}
 		return false;
 	}
