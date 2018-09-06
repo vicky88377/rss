@@ -24,8 +24,8 @@ public class SearchDaoImpl implements SearchDao {
 	@Override
 	public Page<RestaurantModel> findByAreaRatingBudgetDAO(String area, float rating, float minimumOrderPrice,
 			Pageable page) {
-		
-		return restaurantSearchRepository.findByAreaRatingBudget(area, rating, minimumOrderPrice, page);
+		Page<RestaurantModel> modelObject = restaurantSearchRepository.findByAreaRatingBudget(area, rating, minimumOrderPrice, page);
+		return modelObject;
 	}
 
 	@Override
