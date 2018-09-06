@@ -85,6 +85,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 			data = searchDao.findByLonLatAndNameDAO(coOrdinateParams.getRestaurantName(), 
 					coOrdinateParams.getDistance(), coOrdinateParams.getLatitude(), 
 					coOrdinateParams.getLongitude(), pageable);
+			 
 		} else if (coOrdinateParams.getCuisine() != null && !coOrdinateParams.getCuisine().isEmpty()) {
 			// pass all the parameter to the repository to fetch restaurant based on cuisine
 			// and location
@@ -101,7 +102,7 @@ public class RestaurantSearchServiceImpl implements RestaurantSearchServiceInter
 		}
 		return data;
 	}
-
+                    
 	@Override
 	public Page<RestaurantModel> getRestaurantByLocation(CoOrdinateSearchParams coOrdinateParams) {
 		Pageable pageable = PageRequest.of(coOrdinateParams.getPage(), pageSize);
