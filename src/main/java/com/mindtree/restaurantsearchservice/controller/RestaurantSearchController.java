@@ -26,6 +26,8 @@ import com.mindtree.restaurantsearchservice.service.RestaurantSearchServiceInter
 import com.mindtree.restaurantsearchservice.vo.AreaSearchParams;
 import com.mindtree.restaurantsearchservice.vo.CoOrdinateSearchParams;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/restaurants")
 public class RestaurantSearchController {
@@ -35,6 +37,7 @@ public class RestaurantSearchController {
 	private RestaurantSearchServiceInterface service;
 
 	@GetMapping(value = "/search/{area}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@ApiOperation(value = "search restaurants by area", response = RestaurantsResponse.class)
 	public RestaurantsResponse searchRestaurantByArea(@PathVariable String area,
 			@RequestParam(required = false) String name, @RequestParam(defaultValue = "0") Integer page,
 			@RequestParam(required = false, defaultValue = "0") Float rating,
@@ -62,6 +65,7 @@ public class RestaurantSearchController {
 	}
 
 	@GetMapping(path = "/search/{latitude}/{longitude}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@ApiOperation(value = "search restaurants by coordinates", response = RestaurantsResponse.class)
 	public RestaurantsResponse searchRestaurantByCoordinates(@PathVariable Double latitude,
 			@PathVariable Double longitude, @RequestParam(required = false) String name,
 			@RequestParam(defaultValue = "0") Integer page,
@@ -93,6 +97,7 @@ public class RestaurantSearchController {
 	}
 
 	@GetMapping(value = "{restaurant_id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@ApiOperation(value = "get restaurant details", response = RestaurantsResponse.class)
 	public RestaurantDetailResponse getRestaurantDetailsById(@PathVariable("restaurant_id") String restaurantId) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("getting restaurant details of restaurant id=" + restaurantId);
@@ -120,6 +125,7 @@ public class RestaurantSearchController {
 	 */
 
 	@GetMapping(value="/{restaurant_id}/validate/{latitude}/{longitude}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@ApiOperation(value = "validate whether restaurant serve in that area or not", response = RestaurantsResponse.class)
 	public DeliveryInfoResponse validateDeliveryAddress(@PathVariable("restaurant_id") String restaurantId,
 			@PathVariable Double latitude, @PathVariable Double longitude) {
 		if (logger.isDebugEnabled()) {
@@ -147,6 +153,7 @@ public class RestaurantSearchController {
 	}
 
 	@GetMapping(value="/{restaurant_id}/menu", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@ApiOperation(value = "getting food menu of a particular restaurant", response = RestaurantsResponse.class)
 	public FoodMenuResponse getFoodDetailsByRestaurantId(@PathVariable("restaurant_id") String restaurantId) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("getting food details of restaurant id=" + restaurantId);
@@ -157,6 +164,7 @@ public class RestaurantSearchController {
 	}
 
 	@PutMapping(value="/{restaurant_id}/reviews/{rating}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@ApiOperation(value = "update the rating of a restaurant", response = RestaurantsResponse.class)
 	public RestaurantDetailResponse updateRatingDetailOfRestaurant(@PathVariable("restaurant_id") String restaurantId,
 			@PathVariable("rating") float rating) {
 		if (logger.isDebugEnabled()) {
